@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.bluemoon.common.planner.mapper.MallWashPersonExtMapper">
+
+    <select id="selectPlannerByAreaInfo"
+            resultMap="cn.com.bluemoon.common.planner.mapper.MallWashPersonInfoMapper.BaseResultMap">
+        select pi.angel_code, pi.angel_name, pi.phone
+        from mall_wash_person_info pi
+                 inner join mall_wash_person_area_ref par on par.person_id = pi.id
+                 inner join mall_wash_person_area_detail pad on pad.id = par.person_area_detail_id
+        where pi.del_flag = 0
+          and pad.del_flag = 0
+          and pad.province_name = #{province}
+          and pad.city_name = #{city}
+          and pad.county_name = #{county}
+        order by pi.create_time
+        limit 1
+    </select>
+
+    <select id="selectAreaInfoByAngelCode"
+            resultMap="cn.com.bluemoon.common.planner.mapper.MallWashPersonAreaDetailMapper.BaseResultMap">
+        select pad.province_name, pad.city_name, pad.county_name
+        from mall_wash_person_info pi
+                 inner join mall_wash_person_area_ref par on par.person_id = pi.id
+                 inner join mall_wash_person_area_detail pad on pad.id = par.person_area_detail_id
+        where pi.angel_code = #{angelCode}
+    </select>
+
+    <resultMap id="addressInfoMap" type="cn.com.bluemoon.common.planner.vo.AddressInfo">
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="county" column="county"/>
+        <result property="street" column="street"/>
+        <result property="village" column="village"/>
+        <result property="address" column="address"/>
+    </resultMap>
+    <resultMap id="selectNeedAssignOrdersMap" type="cn.com.bluemoon.common.planner.vo.GetNeedDispatchOrderListResVo">
+        <result property="orderType" column="orderType"/>
+        <result property="outerCode" column="outerCode"/>
+        <result property="customerName" column="customerName"/>
+        <result property="customerPhone" column="customerPhone"/>
+        <result property="remark" column="remark"/>
+        <result property="orderCreateTime" column="orderCreateTime"/>
+        <result property="appointmentCode" column="appointmentCode"/>
+        <result property="appointTime" column="appointTime"/>
+        <result property="appointSlot" column="appointSlot"/>
+        <association property="visitAddress" resultMap="addressInfoMap"/>
+    </resultMap>
+    <sql id="selectNeedAssignOrdersSqlAppoint">
+        <if test="addressInfos.size() == 1">
+            <foreach item="area" collection="addressInfos">
+                (appoint.province = #{area.province} and appoint.city = #{area.city} and appoint.county =
+                #{area.county})
+            </foreach>
+        </if>
+        <if test="addressInfos.size() > 1">
+            (appoint.province = '${addressInfos.get(0).province}' and appoint.city = '${addressInfos.get(0).city}' and
+            appoint.county = '${addressInfos.get(0).county}')
+            <foreach item="area" collection="addressInfos">
+                or (appoint.province = #{area.province} and appoint.city = #{area.city} and appoint.county =
+                #{area.county})
+            </foreach>
+        </if>
+    </sql>
+    <sql id="selectNeedAssignOrdersSqlOrder">
+        <if test="addressInfos.size() == 1">
+            <foreach item="area" collection="addressInfos">
+                (orderinfo.province = #{area.province} and orderinfo.city = #{area.city} and orderinfo.county =
+                #{area.county})
+            </foreach>
+        </if>
+        <if test="addressInfos.size() > 1">
+            (orderinfo.province = '${addressInfos.get(0).province}' and orderinfo.city = '${addressInfos.get(0).city}'
+            and
+            orderinfo.county = '${addressInfos.get(0).county}')
+            <foreach item="area" collection="addressInfos">
+                or (orderinfo.province = #{area.province} and orderinfo.city = #{area.city} and orderinfo.county =
+                #{area.county})
+            </foreach>
+        </if>
+    </sql>
+    <select id="selectNeedAssignOrders" resultMap="selectNeedAssignOrdersMap">
+        select 2 orderType,
+        orderinfo.outer_code outerCode,
+        appoint.customer_name customerName,
+        appoint.customer_phone customerPhone,
+        appoint.remark,
+        appoint.create_time orderCreateTime,
+        appoint.province,
+        appoint.city,
+        appoint.county,
+        appoint.street,
+        appoint.village,
+        appoint.address,
+        appoint.appointment_code appointmentCode,
+        appoint.appoint_time appointTime,
+        appoint.appoint_slot appointSlot
+        FROM `mall_wash_appointment_order` `appoint`
+        LEFT JOIN `mall_wash_order_info` `orderinfo` ON `orderinfo`.`outer_code` = `appoint`.`outer_code`
+        LEFT JOIN `mall_wash_collect_info` `collectinfo`
+        ON `collectinfo`.`outer_code` = `orderinfo`.`outer_code`
+        LEFT JOIN `mall_wash_order_dispach` `dispach`
+        ON `dispach`.`outer_code` = `appoint`.`appointment_code` AND
+        `dispach`.`status` IN ('WAIT_ACCEPT', 'ALREADY_ACCEPT')
+        LEFT JOIN `mall_wash_washcenter_collectorder` `collectorder`
+        ON `collectorder`.`collect_code` = `collectinfo`.`collect_code`
+        WHERE `appoint`.`collect_type` = 'come_to_collect_clothes'
+        AND (`appoint`.`appointment_status` IN ('APPOINTMENT_WAIT_DISPATCH',
+        'APPOINTMENT_WAIT_ORDERS',
+        'APPOINTMENT_ALREADY_ORDERS',
+        'APPOINTMENT_FREEZE',
+        'APPOINTMENT_CANCEL')
+        OR
+        `collectinfo`.`collect_status` IN
+        ('TRANSFER', 'ANGEL_LAUNDRYING', 'WASHINGCENTER_RECEIVE_END', 'WASHINGCENTER_ACCEPTING')
+        )
+        AND timestampdiff(MINUTE, `orderinfo`.`pay_time`, now()) > 30
+        AND (
+        <include refid="selectNeedAssignOrdersSqlAppoint"/>
+        )
+        union all
+        select 1 orderType,
+        orderinfo.outer_code outerCode,
+        orderinfo.customer_name customerName,
+        orderinfo.customer_phone customerPhone,
+        orderinfo.buyer_message remark,
+        orderinfo.order_start_time orderCreateTime,
+        orderinfo.province,
+        orderinfo.city,
+        orderinfo.county,
+        orderinfo.street,
+        orderinfo.village,
+        orderinfo.address,
+        '' appointmentCode,
+        null orderinfoTime,
+        '' appointSlot
+        FROM `mall_wash_order_info` `orderinfo`
+        LEFT JOIN `mall_wash_collect_info` `collectinfo`
+        ON `collectinfo`.`outer_code` = `orderinfo`.`outer_code`
+        LEFT JOIN `mall_wash_order_dispach` `dispach` ON `dispach`.`outer_code` = `orderinfo`.`outer_code` AND
+        `dispach`.`status` IN
+        ('WAIT_ACCEPT', 'ALREADY_ACCEPT')
+        LEFT JOIN `mall_wash_washcenter_collectorder` `collectorder`
+        ON `collectorder`.`collect_code` = `collectinfo`.`collect_code`
+        WHERE (`orderinfo`.`source_type` != 'WASHMALL' OR isnull(`orderinfo`.`source_type`))
+        AND (`orderinfo`.`collect_type` = 'come_to_collect_clothes' OR isnull(`orderinfo`.`collect_type`))
+        AND `orderinfo`.`pay_time` IS NOT NULL
+        AND `orderinfo`.`wash_status` IN ('WAIT_ACCEPT', 'WAIT_DISPATCH', 'ALREADY_ACCEPT', 'ORDER_FROZEN')
+        AND orderinfo.collect_clothes_type != 'WASH_ORDER_HOTEL'
+        AND orderinfo.source_type != 'HOTEL_WASH'
+        AND timestampdiff(MINUTE, `orderinfo`.`pay_time`, now()) > 30
+        AND (
+        <include refid="selectNeedAssignOrdersSqlOrder"/>
+        )
+        union all
+        select 1 orderType,
+        orderinfo.outer_code outerCode,
+        orderinfo.customer_name customerName,
+        orderinfo.customer_phone customerPhone,
+        orderinfo.buyer_message remark,
+        orderinfo.order_start_time orderCreateTime,
+        orderinfo.province,
+        orderinfo.city,
+        orderinfo.county,
+        orderinfo.street,
+        orderinfo.village,
+        orderinfo.address,
+        '' appointmentCode,
+        null orderinfoTime,
+        '' appointSlot
+        FROM `mall_wash_order_info` `orderinfo`
+        LEFT JOIN `mall_wash_collect_info` `collectinfo`
+        ON `collectinfo`.`outer_code` = `orderinfo`.`outer_code`
+        LEFT JOIN `mall_wash_order_dispach` `dispach` ON `dispach`.`outer_code` = `orderinfo`.`outer_code` AND
+        `dispach`.`status` IN
+        ('WAIT_ACCEPT', 'ALREADY_ACCEPT')
+        LEFT JOIN `mall_wash_washcenter_collectorder` `collectorder`
+        ON `collectorder`.`collect_code` = `collectinfo`.`collect_code`
+        WHERE (`orderinfo`.`source_type` != 'WASHMALL' OR isnull(`orderinfo`.`source_type`))
+        AND (`orderinfo`.`collect_type` = 'come_to_collect_clothes' OR isnull(`orderinfo`.`collect_type`))
+        AND `orderinfo`.`pay_time` IS NOT NULL
+        AND `collectinfo`.`collect_status` IN
+        ('TRANSFER', 'ANGEL_LAUNDRYING', 'WASHINGCENTER_RECEIVE_END', 'WASHINGCENTER_ACCEPTING')
+        AND orderinfo.collect_clothes_type != 'WASH_ORDER_HOTEL'
+        AND orderinfo.source_type != 'HOTEL_WASH'
+        AND timestampdiff(MINUTE, `orderinfo`.`pay_time`, now()) > 30
+        AND (
+        <include refid="selectNeedAssignOrdersSqlOrder"/>
+        )
+        order by orderCreateTime
+    </select>
+
+    <sql id="selectReceiverAngelsSql">
+        <if test="addressInfos.size() == 1">
+            <foreach item="area" collection="addressInfos">
+                (ad.province_name = #{area.province} and ad.city_name = #{area.city} and ad.county_name =
+                #{area.county})
+            </foreach>
+        </if>
+        <if test="addressInfos.size() > 1">
+            (ad.province_name = '${addressInfos.get(0).province}' and ad.city_name = '${addressInfos.get(0).city}'
+            and
+            ad.county_name = '${addressInfos.get(0).county}')
+            <foreach item="area" collection="addressInfos">
+                or (ad.province_name = #{area.province} and ad.city_name = #{area.city} and ad.county_name =
+                #{area.county})
+            </foreach>
+        </if>
+    </sql>
+    <select id="selectReceiverAngels" resultType="cn.com.bluemoon.common.planner.vo.SearchReceiverAngelResVo">
+        select lpi.angle_code angelCode,
+        lpi.angle_name angelName,
+        lci.city city,
+        lci.center_name receivePoint,
+        '' isCounselor
+        from mall_wash_laundry_person_info lpi
+        inner join mall_wash_laundry_center_info lci on lci.center_code = lpi.center_code
+        inner join mall_wash_center_area_detail ad on ad.center_code = lpi.center_code
+        where lci.service_type = 'collect_office'
+        and ad.del_flag = '0'
+        <if test="angelCode != null and angelCode != '' ">
+            and lpi.angle_code = #{angelCode}
+        </if>
+        <if test="angelName != null and angelName != '' ">
+            and lpi.angle_name = #{angelName}
+        </if>
+        and (
+        <include refid="selectReceiverAngelsSql"/>
+        )
+        union all
+        select pi.angel_code angelCode, pi.angel_name angelName, pi.city_name city, '' receivePoint, 1 isCounselor
+        from mall_wash_person_info pi
+        where pi.type = 2
+        and pi.del_flag = 0
+        <if test="angelCode != null and angelCode != '' ">
+            and pi.angel_code = #{angelCode}
+        </if>
+        <if test="angelName != null and angelName != '' ">
+            and pi.angel_name = #{angelName}
+        </if>
+    </select>
+
+    <!-- 查询地区规划员服务区域 -->
+    <select id="selectAreaDetail" resultType="cn.com.bluemoon.common.planner.po.MallWashPersonAreaDetail">
+        SELECT
+        a.id,
+        a.province_name as provinceName,
+        a.province_code as provinceCode,
+        a.city_name as cityName,
+        a.city_code as cityCode,
+        a.county_name as countyName,
+        a.county_code as countyCode,
+        a.create_time as createTime,
+        a.create_name as createName,
+        a.create_code as createCode,
+        a.del_flag as delFlag
+        FROM
+        mall_wash_person_info c
+        LEFT JOIN mall_wash_person_area_ref b ON b.person_id = c.id
+        LEFT JOIN mall_wash_person_area_detail a ON a.id = b.person_area_detail_id
+        WHERE
+        a.del_flag = 0
+        <if test="id != null">
+            AND c.id = #{id, jdbcType=BIGINT}
+        </if>
+    </select>
+
+</mapper>

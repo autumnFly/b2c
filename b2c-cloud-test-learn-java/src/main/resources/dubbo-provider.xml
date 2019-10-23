@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   
+    xmlns:jee="http://www.springframework.org/schema/jee"  
+    xmlns:tx="http://www.springframework.org/schema/tx"  
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" 
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd  
+    http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd  
+    http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd"  
+    default-lazy-init="false" >  
+   <!-- scanner Zookeeper properties -->
+	<bean id="propertyConfigurerDubbo" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="order" value="1" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:property/dubbo.properties</value>
+				<value>
+                    classpath:property/url.properties
+                </value>
+			</list>
+		</property>
+	</bean>
+	
+   <!-- 提供方应用名称信息，这个相当于起一个名字，我们dubbo管理页面比较清晰是哪个应用暴露出来的 -->  
+   <dubbo:application name="${dubbo.application.name}" owner="${dubbo.application.owner}"/>
+  <!-- <dubbo:monitor protocol="registry"/>-->  
+   <!-- 使用zookeeper注册中心暴露服务地址 -->    
+   <!-- <dubbo:registry address="zookeeper://172.16.2.142:2181,172.16.2.142:2182,172.16.2.142:2183" check="false" subscribe="false" register=""/> -->  
+  <dubbo:protocol name="${dubbo.protocol.name}" payload="50331648"/>
+  
+  <dubbo:registry protocol="${dubbo.registry.protocol}" address="${dubbo.registry.address}" timeout="60000" check="false"  />
+   <!--  <dubbo:registry address="zookeeper://192.168.240.15:2181?backup=192.168.240.15:2182,192.168.240.15:2183" check="false" file="/dubboregistry/dubbo-registry.properties" />-->
+   
+  <!-- 要暴露的服务接口 -->    
+  <!-- <dubbo:service interface="cn.com.bluemoon.service.zkdemo.service.TestRegistryService" ref="testRegistryService" /> -->
+  <!-- <dubbo:service interface="cn.com.bluemoon.service.mallerp.StorehouseInterface" ref="storehouseService" />
+   -->
+  <!-- 用户服务示例 -->
+   <!-- <dubbo:service interface="cn.com.bluemoon.service.user.service.UserBaseService" ref="userBaseService" /> -->
+   <!--<dubbo:service interface="cn.com.bluemoon.service.dockingdistributor.service.MasterDataService" ref="masterDataService" />
+   <dubbo:service interface="cn.com.bluemoon.service.dockingdistributor.service.OrderInfoService" ref="orderInfoService" />
+   <dubbo:service interface="cn.com.bluemoon.service.user.service.UserBaseService" ref="userBaseService" /> 
+   
+   
+   
+	<dubbo:service interface="cn.com.bluemoon.service.clothesInfo.service.MallWashOrderTotalService" ref="mallWashOrderTotalService" 
+    retries="0"  phone="18698626013" owner="${dubbo.application.owner}"  complexity="0" timeout="8000" />
+   <dubbo:service interface="cn.com.bluemoon.service.washingOrder.service.WashingOrderTimerService" ref="washingOrderTimerService" 
+    retries="0"  phone="18698626013" owner="${dubbo.application.owner}"  complexity="0" timeout="8000"/>
+   <dubbo:reference interface="com.bluemoon.gateway.api.order.service.AppOrderService" id="appOrderService" timeout="60000" retries="0" check="false" />
+	
+	<dubbo:reference interface="cn.com.bluemoon.service.user.service.SsoService" id="ssoSerivce"  timeout="60000" retries="0" check="false" />
+	
+   -->
+
+	<!-- 酒店洗衣服务 -->
+   <dubbo:service interface="cn.com.bluemoon.service.hotel.api.HotelPointsService" ref="hotelPointsService" version="1.0.0"/>
+
+   <dubbo:service interface="cn.com.bluemoon.service.hotel.api.HotelGoodsInfoDubboService" ref="hotelGoodsInfoDubboService" version="1.0.0"/>
+   <!--  获取地址省市区信息 -->
+   <dubbo:service interface="cn.com.bluemoon.service.hotel.api.MallAreaInfoDubboService" ref="mallAreaInfoDubboService" version="1.0.0"/>
+
+   <!-- 对衣物类型提供服务 -->
+   <dubbo:service interface="cn.com.bluemoon.service.station.api.ClothesTypeService" ref="clothesTypeService"/> 
+   <!-- 对至尊洗衣提供服务 -->
+   <dubbo:service interface="cn.com.bluemoon.service.station.api.DubboCommonService" ref="dubboCommonService" timeout="60000"/> 
+   <!-- 对角标显示提供服务 -->
+	<dubbo:service interface="cn.com.bluemoon.service.clothesInfo.service.MallWashOrderTotalService" ref="mallWashOrderTotalService"  version="1.0.0"/>
+   <!-- 对月亮小屋提供订单同步服务 -->
+   <dubbo:service interface="cn.com.bluemoon.service.washingOrder.service.WashingOrderTimerService" ref="washingOrderTimerService"/>
+   <!-- 对商品提供服务 -->
+  <!--  <dubbo:service interface="cn.com.bluemoon.service.hotel.api.HotelGoodsInfoDubboService" ref="hotelGoodsInfoDubboService"/>  -->
+
+
+   <dubbo:service interface=" cn.com.bluemoon.service.hotel.api.HotelContractDubboService" ref="hotelContractDubboServiceImpl" version="1.0.0"/>
+
+   <!-- 对联盟商户平台提供结算账单服务 -->
+   <dubbo:service interface=" cn.com.bluemoon.service.hotel.api.HotelwashBillDubboService" ref="hotelwashBillDubboService" version="1.0.0" timeout="60000"/>
+
+   <!-- 对商品提供服务 -->
+  <!--  <dubbo:service interface="cn.com.bluemoon.service.hotel.api.HotelGoodsInfoDubboService" ref="hotelGoodsInfoDubboService"/>  -->
+
+	<!--电商客户管理系统-->
+    <dubbo:service interface=" cn.com.bluemoon.service.ebusiness.api.OrderDubboService" ref="orderDubboServiceImpl" version="1.0.0"/>
+    <dubbo:service interface=" cn.com.bluemoon.service.customermanage.api.OrderDubboForCustomerManageService" ref="OrderDubboForCustomerManageServiceImpl" version="2.0.0"/>
+   <dubbo:reference interface="com.bluemoon.gateway.api.order.service.AppOrderService" id="appOrderService"  check="false" />
+	<dubbo:reference interface="cn.com.bluemoon.service.user.service.SsoService" id="ssoSerivce"   check="false" />
+	<dubbo:reference interface="cn.com.bluemoon.print.dubbo.service.LablePrintService" id="lablePrintService"   check="false"  version="1.0.0"/>
+	<dubbo:reference interface="cn.com.bluemoon.wash.dubbo.service.WashLevelTypeService" id="washLevelTypeService"   check="false"  version="1.0.0"/>
+    <dubbo:reference interface="cn.com.bluemoon.mall.order.dubbo.service.MallWashOrderService" id="mallWashOrderService"
+                     timeout="60000" retries="0" check="false" version="1.0.0"/>
+    <dubbo:reference interface="cn.com.bluemoon.wash.dubbo.service.WashPriceManageService" id="washPriceManageService"
+                     timeout="60000" retries="0" check="false" version="1.0.0"/>
+    <dubbo:reference interface="cn.com.bluemoon.appointment.dubbo.service.AppointmentApiService" id="appointmentApiService"
+                     timeout="60000" retries="0" check="false" version="1.0.0"/>
+    <dubbo:reference interface="cn.com.bluemoon.mallwash.order.dubbo.service.WashOrderService" id="washOrderService"
+                     timeout="60000" retries="0" check="false" version="1.0.0"/>
+    <dubbo:reference interface="cn.com.bluemoon.service.common.service.RegionService" id="regionService"
+                     timeout="60000" retries="0" check="false"/>
+	<!-- 短信发送 -->
+	<dubbo:reference interface="com.bluemoon.proxy.service.sms.SmsService" id="smsService" timeout="60000" retries="0" check="false"/>
+	<dubbo:reference interface="cn.com.bluemoon.service.mallcrm.service.message.MesssagePushService" id="messagePushService" timeout="60000" retries="0" check="false" />
+	<dubbo:reference interface="com.bluemoon.fastdfs.dubbo.BaseFileService" id="baseFileService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+	
+	<!-- 快递物流 -->                 
+    <dubbo:reference interface="cn.com.bluemoon.dubbo.kdn.SubscribeService" id="subscribeService " timeout="60000"
+	 				retries="0" check="false" version="1.0.0"/>
+	<dubbo:reference interface="cn.com.bluemoon.dubbo.kdn.QueryTracesService" id="queryTracesService " timeout="60000"
+	 				retries="0" check="false" version="1.0.0"/>
+	 <!-- 洗衣服务调用 --> 
+	<dubbo:reference interface="cn.com.bluemoon.mallorder.dubbo.service.extend.WashingService" id="washingService"  check="false" />
+	<dubbo:reference interface="cn.com.bluemoon.hotelwash.order.dubbo.service.HotelWashOrderInfoDubboService" id="hotelWashOrderInfoDubboService"
+					timeout="60000" retries="0" check="false" version="1.0.0"/>
+	<!-- 企业洗衣 -->
+	<dubbo:reference interface="cn.com.bluemoon.wash.dubbo.service.MallWashEnterpriseDubboService" 
+		id="mallWashEnterpriseDubboService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+	<dubbo:reference interface="cn.com.bluemoon.wash.dubbo.service.CooperationInfoService" 
+		id="cooperationInfoService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+	<dubbo:reference interface="cn.com.bluemoon.wash.dubbo.service.MallWashContractInfoService" 
+		id="mallWashContractInfoService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+	<dubbo:reference interface="cn.com.bluemoon.file.dubbo.service.ImageService" 
+		id="imageService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+    <dubbo:reference interface="cn.com.bluemoon.wash.dubbo.service.EnterpriseReceiveDubboService" 
+    	id="enterpriseReceiveDubboService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+	<dubbo:reference interface="cn.com.bluemoon.wash.dubbo.service.MallWashRechargeVoucherService" 
+		id="mallWashRechargeVoucherService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+	<dubbo:reference interface="cn.com.bluemoon.mallwash.order.dubbo.service.WashEnterpriseOrderService" 
+		id="washEnterpriseOrderService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+	<dubbo:reference interface="cn.com.bluemoon.mall.user.dubbo.service.UserService" 
+		id="userService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+	<dubbo:reference interface="cn.com.bluemoon.mall.share.dubbo.service.MallRecommendService" 
+		id="mallRecommendService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+
+	<!-- 酒店洗衣 -->
+	<dubbo:reference interface="cn.com.bluemoon.hotelwash.goods.dubbo.service.HotelWashGoodsTypeDubboService"
+		id="hotelWashGoodsTypeDubboService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+	<dubbo:reference interface="cn.com.bluemoon.hotelwash.goods.dubbo.service.HotelWashGoodsInfoDubboService"
+		id="hotelWashGoodsInfoDubboService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+	<dubbo:reference interface="cn.com.bluemoon.admin.api.updatesysuser.dubbo.service.CompanyUserDubboService"
+		id="userDubboService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+
+
+		<!-- 江门二期企业活动 -->
+	<dubbo:reference interface="cn.com.bluemoon.wash.dubbo.service.EnterpriseActivityDubboService"
+		id="enterpriseActivityDubboService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+
+	<dubbo:reference interface="cn.com.bluemoon.wash.dubbo.service.EnterpriseSuiteDubboService"
+		id="enterpriseSuiteDubboService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+
+    <dubbo:reference interface="cn.com.bluemoon.wash.dubbo.service.EnterpriseOrderDubboService"
+                     id="orderDubboService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+
+    <dubbo:reference interface="cn.com.bluemoon.moonmall.order.dubbo.service.MoonMallOrderService"
+		id="moonMallOrderService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+
+    <dubbo:reference interface="cn.com.bluemoon.moonmall.item.dubbo.service.MoonMallItemService"
+		id="itemService" timeout="60000" retries="0" check="false" version="1.0.0"/>
+
+</beans>

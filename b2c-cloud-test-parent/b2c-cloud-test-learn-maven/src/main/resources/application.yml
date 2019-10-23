@@ -1,0 +1,36 @@
+server:
+  port: 9900
+spring:
+  application:
+    name: b2c-cloud-test-learn-maven
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+eureka:
+  #关于instance的更多配置信息可查看EurekaInstanceConfigBean
+  instance:
+    hostname: eureka.dev.csair.com
+    port: 8761
+    #IP地址作为实例名
+    preferIpAddress: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+    nonSecurePort: ${server.port}
+    leaseRenewalIntervalInSeconds: 30
+    leaseExpirationDurationInSeconds: 90
+  #关于client的更多配置信息可查看EurekaClientConfigBean
+  client:
+    registryFetchIntervalSeconds: 5
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+management:
+  security:
+    enabled: false
+info:
+  service-name: ${spring.application.name}
+  packagetime: ${packagetime}
+  ip: ${spring.cloud.client.ipAddress}
+  system: ${os.name}
+  repository: ${settings.localRepository}
+  user-home: ${user.home}
+  java-home: ${env.JAVA_HOME}

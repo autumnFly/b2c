@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: b2c-cloud-test-batch
+  batch.initialize-schema: ALWAYS
+eureka:
+  instance:
+    hostname: eureka.dev.csair.com
+    port: 8761
+    nonSecurePort: ${server.port:8600}
+    preferIpAddress: true
+    statusPageUrlPath: /info
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+server:
+  port: 8195
+endpoints:
+  shutdown:
+    enabled: true
+info:
+  service-name: ${spring.application.name}
+  packagetime: ${packagetime}
+  ip: ${spring.cloud.client.ipAddress}
+  env: ${active.profile.name}
+  system: ${os.name}

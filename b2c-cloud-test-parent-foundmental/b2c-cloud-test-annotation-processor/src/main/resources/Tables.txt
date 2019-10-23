@@ -1,0 +1,7 @@
+com.csair.b2c.cloud.test.annotation.processor
+---
+mall_person_info
+  java.lang.String name
+---
+mall_address_info
+  java.lang.String province

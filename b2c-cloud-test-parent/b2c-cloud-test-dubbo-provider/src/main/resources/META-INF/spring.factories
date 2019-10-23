@@ -1,0 +1,2 @@
+org.springframework.boot.ApplicationListener=\
+com.csair.b2c.cloud.test.dubbo.provider.VersionProcessor

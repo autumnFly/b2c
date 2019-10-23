@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csair.b2c.test.mybatis.mapper.mysql.PaperMapper">
+  <resultMap id="BaseResultMap" type="com.csair.b2c.test.mybatis.model.Paper">
+    <id column="paper_id" jdbcType="BIGINT" property="paperId" />
+    <result column="paper_code" jdbcType="VARCHAR" property="paperCode" />
+    <result column="paper_name" jdbcType="VARCHAR" property="paperName" />
+    <result column="paper_type" jdbcType="VARCHAR" property="paperType" />
+    <result column="read_type" jdbcType="TINYINT" property="readType" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="topic_total_num" jdbcType="INTEGER" property="topicTotalNum" />
+    <result column="topic_total_point" jdbcType="INTEGER" property="topicTotalPoint" />
+    <result column="del_flag" jdbcType="TINYINT" property="delFlag" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from paper
+    where paper_id = #{paperId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.csair.b2c.test.mybatis.model.Paper">
+    insert into paper (paper_id, paper_code, paper_name, 
+      paper_type, read_type, status, 
+      topic_total_num, topic_total_point, del_flag
+      )
+    values (#{paperId,jdbcType=BIGINT}, #{paperCode,jdbcType=VARCHAR}, #{paperName,jdbcType=VARCHAR}, 
+      #{paperType,jdbcType=VARCHAR}, #{readType,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
+      #{topicTotalNum,jdbcType=INTEGER}, #{topicTotalPoint,jdbcType=INTEGER}, #{delFlag,jdbcType=TINYINT}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.csair.b2c.test.mybatis.model.Paper">
+    update paper
+    set paper_code = #{paperCode,jdbcType=VARCHAR},
+      paper_name = #{paperName,jdbcType=VARCHAR},
+      paper_type = #{paperType,jdbcType=VARCHAR},
+      read_type = #{readType,jdbcType=TINYINT},
+      status = #{status,jdbcType=TINYINT},
+      topic_total_num = #{topicTotalNum,jdbcType=INTEGER},
+      topic_total_point = #{topicTotalPoint,jdbcType=INTEGER},
+      del_flag = #{delFlag,jdbcType=TINYINT}
+    where paper_id = #{paperId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select paper_id, paper_code, paper_name, paper_type, read_type, status, topic_total_num, 
+    topic_total_point, del_flag
+    from paper
+    where paper_id = #{paperId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select paper_id, paper_code, paper_name, paper_type, read_type, status, topic_total_num, 
+    topic_total_point, del_flag
+    from paper
+  </select>
+</mapper>

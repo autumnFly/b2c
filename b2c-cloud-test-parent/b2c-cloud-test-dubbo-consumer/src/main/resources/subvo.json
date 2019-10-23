@@ -1,0 +1,28 @@
+[{
+  "serviceMoney": 72,
+  "serviceRate": 3.8,
+  "serviceSettlementBase": 1900,
+  "settlementClothNum": 1,
+  "subfamilyName": "星期一系列"
+},
+  {
+    "serviceMoney": 1152,
+    "serviceRate": 4.8,
+    "serviceSettlementBase": 24000,
+    "settlementClothNum": 2,
+    "subfamilyName": "星期二系列"
+  },
+  {
+    "serviceMoney": 110,
+    "serviceRate": 5.8,
+    "serviceSettlementBase": 1900,
+    "settlementClothNum": 1,
+    "subfamilyName": "星期三系列"
+  },
+  {
+    "serviceMoney": 204,
+    "serviceRate": 6.8,
+    "serviceSettlementBase": 3000,
+    "settlementClothNum": 3,
+    "subfamilyName": "星期四系列"
+  }]

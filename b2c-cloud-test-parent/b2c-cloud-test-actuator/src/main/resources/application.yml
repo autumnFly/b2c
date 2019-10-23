@@ -1,0 +1,46 @@
+server:
+  port: 8500
+  context-path: /washingServiceMana
+spring:
+  application:
+    name: b2c-cloud-test-actuator
+  database:
+    username: ${db.username}
+    password: ${db.password}
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+eureka:
+  #关于instance的更多配置信息可查看EurekaInstanceConfigBean
+  instance:
+    hostname: eureka.dev.csair.com
+    port: 8761
+    #IP地址作为实例名
+    preferIpAddress: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+    nonSecurePort: ${server.port}
+    leaseRenewalIntervalInSeconds: 30
+    leaseExpirationDurationInSeconds: 90
+  #关于client的更多配置信息可查看EurekaClientConfigBean
+  client:
+    registryFetchIntervalSeconds: 5
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+management:
+  security:
+    enabled: false
+#默认情况下，日志文件的大小达到10MB时会切分一次
+logging:
+  path: /var/logs/
+  file: actuator-application.log
+  level:
+    root: warn
+    com.csair.com.cloud.test.actuator: info
+server.tomcat.accesslog:
+  enabled: true
+info:
+  service-name: ${spring.application.name}
+  packagetime: ${packagetime}
+  ip: ${spring.cloud.client.ipAddress}
+  system: ${os.name}
