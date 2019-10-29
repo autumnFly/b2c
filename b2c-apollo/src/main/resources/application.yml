@@ -1,0 +1,21 @@
+server:
+  port: 8969
+spring:
+  application:
+    name: b2c-apollo
+management:
+  security:
+    enabled: false
+logging:
+  path: /var/logs/
+  file: b2c-apollo-application.log
+  level:
+    root: warn
+    org.javamaster.b2c: info
+server.tomcat.accesslog:
+  enabled: true
+info:
+  service-name: ${spring.application.name}
+  packagetime: ${packagetime}
+  ip: ${spring.cloud.client.ipAddress}
+  system: ${os.name}
