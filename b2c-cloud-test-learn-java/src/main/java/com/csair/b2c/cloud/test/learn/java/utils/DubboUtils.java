@@ -21,9 +21,9 @@ public class DubboUtils {
 
     private static ApplicationConfig application = new ApplicationConfig();
 
-    private static final String address = ZOOKEEPER_ADDRESS;
-    // private static final String address = ZOOKEEPER_ADDRESS_1;
-    // private static final String address = ZOOKEEPER_ADDRESS_2;
+    private static final String ADDRESS = ZOOKEEPER_ADDRESS;
+    // private static final String ADDRESS = ZOOKEEPER_ADDRESS_1;
+    // private static final String ADDRESS = ZOOKEEPER_ADDRESS_2;
 
     static {
         application.setName("b2c-cloud-test-lean-java");
@@ -62,7 +62,7 @@ public class DubboUtils {
         String referenceKey = interfaceClass.getName();
         ReferenceConfig referenceConfig = new ReferenceConfig<>();
         referenceConfig.setApplication(application);
-        referenceConfig.setRegistry(getRegistryConfig(address, group, version));
+        referenceConfig.setRegistry(getRegistryConfig(group, version));
         referenceConfig.setInterface(interfaceClass);
         referenceConfig.setVersion(version);
         referenceConfig.setTimeout(300000);
@@ -74,9 +74,9 @@ public class DubboUtils {
         return referenceConfig;
     }
 
-    private static RegistryConfig getRegistryConfig(String address, String group, String version) {
+    private static RegistryConfig getRegistryConfig(String group, String version) {
         RegistryConfig registryConfig = new RegistryConfig();
-        registryConfig.setAddress(address);
+        registryConfig.setAddress(DubboUtils.ADDRESS);
         registryConfig.setVersion(version);
         registryConfig.setGroup(group);
         registryConfig.setTimeout(30000);

@@ -8,17 +8,21 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import static org.javamaster.b2c.config.BlueMoonConsts.WashingService.PASSWORD;
-import static org.javamaster.b2c.config.BlueMoonConsts.WashingService.URL;
-import static org.javamaster.b2c.config.BlueMoonConsts.WashingService.USERNAME;
+import static org.javamaster.b2c.config.BlueMoonConsts.Local.PASSWORD;
+import static org.javamaster.b2c.config.BlueMoonConsts.Local.URL_SAKILA;
+import static org.javamaster.b2c.config.BlueMoonConsts.Local.USERNAME;
 import org.mybatis.spring.SqlSessionFactoryBean;
 
 import java.util.Properties;
 
+// import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+// import static org.javamaster.b2c.config.BlueMoonConsts.WashingService.PASSWORD;
+// import static org.javamaster.b2c.config.BlueMoonConsts.WashingService.URL;
+// import static org.javamaster.b2c.config.BlueMoonConsts.WashingService.USERNAME;
+
 /**
- * Created on 2019/3/20.<br/>
- *
  * @author yudong
+ * @date 2019/3/20
  */
 public class WashingServiceUtils {
 
@@ -49,6 +53,7 @@ public class WashingServiceUtils {
             sqlSessionFactory = sessionFactory.getObject();
             Configuration configuration = sqlSessionFactory.getConfiguration();
             configuration.addMappers("cn.com.bluemoon.common.planner.mapper");
+            configuration.addMappers("cn.com.bluemoon.common.customizingwash.mapper");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -67,7 +72,7 @@ public class WashingServiceUtils {
         if (dataSourceWashingService != null) {
             return dataSourceWashingService;
         }
-        dataSourceWashingService = MybatisUtils.druidDataSource(URL, USERNAME, PASSWORD);
+        dataSourceWashingService = MybatisUtils.druidDataSource(URL_SAKILA, USERNAME, PASSWORD);
         return dataSourceWashingService;
     }
 

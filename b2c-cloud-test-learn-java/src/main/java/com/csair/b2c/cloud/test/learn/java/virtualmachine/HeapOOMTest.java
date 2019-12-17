@@ -10,20 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * VM Args:-Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError
- * <p>
- * -XX:PermSize=10m -XX:MaxPermSize=10m
- * -XX:+PrintGCDetails
- * Created on 2018/6/14.
+ * VM Args:-Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError -XX:PermSize=10m -XX:MaxPermSize=10m -XX:+PrintGCDetails
  *
  * @author yudong
+ * @date 2018/6/14
  */
 public class HeapOOMTest {
     static class OOMObject {
     }
 
     public static void main(String[] args) {
-        List<OOMObject> list = new ArrayList<OOMObject>();
+        List<OOMObject> list = new ArrayList<>();
         while (true) {
             list.add(new OOMObject());
         }
@@ -49,6 +46,28 @@ class SampleClassTest {
             SampleClassTest sample = (SampleClassTest) enhancer.create();
             sample.test();
         }
+    }
+}
+
+/**
+ * VM Args:-Xss128k
+ */
+class StackOverFlow {
+    public static void main(String[] args) {
+        StackOverFlow stackOverFlow = new StackOverFlow();
+        try {
+            stackOverFlow.stack();
+        } catch (Throwable throwable) {
+            System.out.println(stackOverFlow.length);
+            throwable.printStackTrace();
+        }
+    }
+
+    private int length = 0;
+
+    private void stack() {
+        length++;
+        stack();
     }
 }
 
@@ -79,7 +98,7 @@ class DirectMemoryOOMTest {
  */
 class HandlePromotionTest {
     public static void main(String[] args) {
-        int _1MB = 1024 * 1024;
+        int oneMb = 1024 * 1024;
         byte[] allocation1,
                 allocation2,
                 allocation3,
@@ -87,16 +106,16 @@ class HandlePromotionTest {
                 allocation5,
                 allocation6,
                 allocation7;
-        allocation1 = new byte[2 * _1MB];
-        allocation2 = new byte[2 * _1MB];
-        allocation3 = new byte[2 * _1MB];
+        allocation1 = new byte[2 * oneMb];
+        allocation2 = new byte[2 * oneMb];
+        allocation3 = new byte[2 * oneMb];
         allocation1 = null;
-        allocation4 = new byte[2 * _1MB];
-        allocation5 = new byte[2 * _1MB];
-        allocation6 = new byte[2 * _1MB];
+        allocation4 = new byte[2 * oneMb];
+        allocation5 = new byte[2 * oneMb];
+        allocation6 = new byte[2 * oneMb];
         allocation4 = null;
         allocation5 = null;
         allocation6 = null;
-        allocation7 = new byte[2 * _1MB];
+        allocation7 = new byte[2 * oneMb];
     }
 }
