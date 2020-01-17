@@ -1,13 +1,10 @@
 package org.javamaster.b2c.kafka.runner;
 
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.Random;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author yudong
@@ -15,25 +12,17 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class ProducerRunner implements CommandLineRunner {
+
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
-    private Random random = new Random();
 
     @Override
     public void run(String... args) {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            while (true) {
-                String s = String.valueOf(random.nextLong());
-                System.out.println("producer:" + s);
-                try {
-                    kafkaTemplate.send("topic_order_code", "orderCode", s);
-                    TimeUnit.SECONDS.sleep(3);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
-            }
-        });
+        JSONObject json = new JSONObject();
+        json.put("orderTime", System.currentTimeMillis());
+        json.put("userId", "U16042011265010759941");
+        json.put("labelType", 2);
+        kafkaTemplate.send("test_topic_order_code", json.toString());
     }
 
 }

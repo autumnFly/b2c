@@ -7,6 +7,7 @@ import com.alibaba.dubbo.rpc.service.GenericService;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import static org.javamaster.b2c.config.BlueMoonConsts.Dubbo.ZOOKEEPER_ADDRESS;
+import static org.javamaster.b2c.config.BlueMoonConsts.Dubbo.ZOOKEEPER_ADDRESS_1;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -21,8 +22,8 @@ public class DubboUtils {
 
     private static ApplicationConfig application = new ApplicationConfig();
 
-    private static final String ADDRESS = ZOOKEEPER_ADDRESS;
-    // private static final String ADDRESS = ZOOKEEPER_ADDRESS_1;
+    // private static final String ADDRESS = ZOOKEEPER_ADDRESS;
+    private static final String ADDRESS = ZOOKEEPER_ADDRESS_1;
     // private static final String ADDRESS = ZOOKEEPER_ADDRESS_2;
 
     static {

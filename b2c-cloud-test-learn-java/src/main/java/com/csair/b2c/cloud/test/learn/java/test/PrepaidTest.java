@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 public class PrepaidTest {
     @Test
     public void chargePrepaid() {
-        String mobile = "18826483966";
+        String mobile = "18826483963";
         JdbcTemplate jdbcTemplate = MybatisUtils.getJdbcTemplateMoonMall();
         String sql = "select * from mall_user_base where mobile = ?";
         Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[]{mobile});
@@ -44,9 +45,9 @@ public class PrepaidTest {
         if (prepaidIds.isEmpty()) {
             return;
         }
-        sql = "update mall_user_prepaid_package set state = ? where prepaid_id = ? and user_id = ?";
+        sql = "update mall_user_prepaid_package set state = ?,buy_time = ? where prepaid_id = ? and user_id = ?";
         for (String prepaidId : prepaidIds) {
-            int affect = jdbcTemplate.update(sql, "payed", prepaidId, userId);
+            int affect = jdbcTemplate.update(sql, "payed", new Date(), prepaidId, userId);
             System.out.println(affect);
         }
     }

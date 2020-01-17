@@ -1,6 +1,8 @@
 package com.csair.b2c.cloud.test.learn.java.dubbo;
 
 import cn.com.bluemoon.file.dubbo.service.ImageService;
+import cn.com.bluemoon.mall.activity.dubbo.dto.UserCouponPackageManageDto;
+import cn.com.bluemoon.mall.activity.dubbo.service.UserCouponPackageManageService;
 import cn.com.bluemoon.mall.order.dubbo.service.MallWashOrderService;
 import cn.com.bluemoon.mall.user.dubbo.dto.UserInfoDto;
 import cn.com.bluemoon.mall.user.dubbo.enums.MatchType;
@@ -257,6 +259,15 @@ public class DubboTest {
     public void test23() {
         CustomizingOrderDubboService service = DubboUtils.getService(CustomizingOrderDubboService.class, "1.0.0");
         Object resObj = service.findCustomizingOrderDetails("TW191128093529703502");
+        System.out.println(OMUtils.writeValueAsString(resObj, true));
+    }
+
+    @Test
+    public void test24() {
+        UserCouponPackageManageService service = DubboUtils.getService(UserCouponPackageManageService.class, "1.0.0");
+        UserCouponPackageManageDto dto = new UserCouponPackageManageDto();
+        dto.setPhone("18826483963");
+        Object resObj = service.getUserCouponPackageManagePage(dto);
         System.out.println(OMUtils.writeValueAsString(resObj, true));
     }
 

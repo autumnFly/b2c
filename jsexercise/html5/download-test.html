@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../jquery/axios.min.js" type="text/javascript"></script>
+</head>
+<body>
+<div>
+
+    <button onclick="exportFile()">测试下载</button>
+
+</div>
+<script type="text/javascript">
+
+    function exportFile() {
+        download("http://localhost:8258/home/export", [1, 20, 3, 42, 58])
+    }
+
+    function download(url, reqDataObj, beforeDownFunc, afterDownloadFunc, failDownloadFunc) {
+        if (beforeDownFunc) {
+            beforeDownFunc();
+        }
+        axios({
+            method: 'post',
+            url: url,
+            data: JSON.stringify(reqDataObj),
+            responseType: 'blob',
+            headers: {accept: '*/*', "content-type": "application/json"}
+        }).then(resData => {
+
+            var content = resData.headers["content-disposition"];
+            var index = content.indexOf("filename=");
+            var fileName = content.substring(index + "filename=".length + 1, content.length - 1);
+            fileName = decodeURIComponent(fileName);
+
+            let blob = new Blob([resData.data], {type: resData.data.type})
+            let downloadElement = document.createElement('a')
+            // 创建下载的链接
+            let href = window.URL.createObjectURL(blob);
+            downloadElement.href = href;
+            // 下载后文件名
+            downloadElement.download = fileName;
+            document.body.appendChild(downloadElement);
+            // 点击下载
+            downloadElement.click();
+            // 下载完成移除元素
+            document.body.removeChild(downloadElement);
+            // 释放blob对象
+            window.URL.revokeObjectURL(href);
+        }).catch((error) => {
+            console.error(error);
+            if (failDownloadFunc) {
+                failDownloadFunc(error);
+            }
+        }).finally(() => {
+            if (afterDownloadFunc) {
+                afterDownloadFunc();
+            }
+        })
+    }
+</script>
+
+</body>
+</html>

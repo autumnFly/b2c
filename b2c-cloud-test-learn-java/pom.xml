@@ -323,6 +323,11 @@
             <artifactId>handypoi-excel</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>cn.com.bluemoon</groupId>
+            <artifactId>service-mall-activity-api</artifactId>
+            <version>0.0.3-SNAPSHOT</version>
+        </dependency>
         <!--解决至尊项目dubbo报zookeeper找不到问题,加入下列依赖并重新导入-->
         <!--<dependency>-->
         <!--<groupId>org.apache.zookeeper</groupId>-->

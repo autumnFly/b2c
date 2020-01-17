@@ -6,11 +6,15 @@
 </head>
 <body>
 <div>
-    <input type="file" onchange="readFiles(event)" multiple>
+    <input type="file" onchange="readFiles(event)">
 </div>
 
 <div id="fileDropZone">
     Drag file in here
+</div>
+
+<div>
+    <img src="" id="img-show"/>
 </div>
 
 <time datetime="2012-05-01">May 1st 2012</time>
@@ -31,11 +35,11 @@
 
     function loadAsText(theFile) {
         var reader = new FileReader();
+        reader.readAsText(theFile);
         reader.onload = function (loadedEvent) {
             // result contains loaded file.
             console.log(loadedEvent.target.result);
         };
-        reader.readAsText(theFile);
     }
 
     function loadAsTextSlice(theFile) {
@@ -52,17 +56,17 @@
 
     function loadAsUrl(theFile) {
         var reader = new FileReader();
-
         reader.onload = function (loadedEvent) {
             console.log(loadedEvent.target.result);
+            document.getElementById("img-show").src = loadedEvent.target.result;
         };
         reader.readAsDataURL(theFile);
     }
 
     function loadAsArrayBuffer(theFile) {
         var reader = new FileReader();
-        reader.onload = function(loadedEvent) {
-            var arrayBuffer =  loadedEvent.target.result;
+        reader.onload = function (loadedEvent) {
+            var arrayBuffer = loadedEvent.target.result;
             var dataView = new DataView(arrayBuffer, 0, arrayBuffer.byteLength);
             var byte = dataView.getUint8(0);   //gets first byte of ArrayBuffer
             //... process rest of dataView ...
