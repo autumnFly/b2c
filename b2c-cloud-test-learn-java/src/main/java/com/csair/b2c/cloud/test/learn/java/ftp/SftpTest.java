@@ -99,4 +99,41 @@ public class SftpTest {
         executorService.awaitTermination(100, TimeUnit.SECONDS);
     }
 
+    @Test
+    public void testPrdHonor() throws Exception {
+        String localPath = "G:/logs/statistical/logs";
+        String name = "service-mall-statistical.log";
+        String prefix = "service-mall-statistical-info-2019-12-";
+
+        executorService.submit(() -> {
+            SftpClient sftpClient = new SftpClient(BlueMoonConsts.SftpServer.PRD_USERNAME, BlueMoonConsts.SftpServer.PRD_PASSWORD,
+                    BlueMoonConsts.SftpServer.SERVER_90, BlueMoonConsts.SftpServer.PORT);
+            try {
+                sftpClient.connect();
+                sftpClient.downloadLogFiles(BlueMoonConsts.LogPath.MALL_STATISTICAL, localPath + "1",
+                        name, prefix);
+            } catch (Exception e) {
+                log.error("error", e);
+            } finally {
+                sftpClient.disconnect();
+            }
+        });
+
+        executorService.submit(() -> {
+            SftpClient sftpClient = new SftpClient(BlueMoonConsts.SftpServer.PRD_USERNAME, BlueMoonConsts.SftpServer.PRD_PASSWORD,
+                    BlueMoonConsts.SftpServer.SERVER_91, BlueMoonConsts.SftpServer.PORT);
+            try {
+                sftpClient.connect();
+                sftpClient.downloadLogFiles(BlueMoonConsts.LogPath.MALL_STATISTICAL, localPath + "2",
+                        name, prefix);
+            } catch (Exception e) {
+                log.error("error", e);
+            } finally {
+                sftpClient.disconnect();
+            }
+        });
+        executorService.shutdown();
+        executorService.awaitTermination(120, TimeUnit.SECONDS);
+    }
+
 }
