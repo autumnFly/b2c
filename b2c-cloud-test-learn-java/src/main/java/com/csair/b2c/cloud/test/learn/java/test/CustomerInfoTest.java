@@ -50,6 +50,7 @@ public class CustomerInfoTest {
         info.setUserName(rs.getString("user_name"));
         info.setAngelCode(rs.getString("angel_code"));
         info.setLabelType(rs.getString("label_type"));
+        info.setAutonym(rs.getBoolean("autonym"));
         info.setBinging(rs.getInt("binging"));
         info.setRegisterTime(rs.getDate("register_time"));
         info.setBingingTime(rs.getDate("binging_time"));
@@ -59,6 +60,7 @@ public class CustomerInfoTest {
     private static final List<String> SPECIAL_LIST = Arrays.asList("machine_wash_frequency", "hand_wash_frequency", "preprocessing_frequency");
     private static final Map<String, Integer> SPECIAL_MAP = Maps.newLinkedHashMap();
     private static final Pattern PATTERN = Pattern.compile("[0-9]+");
+
     static {
         SPECIAL_MAP.put("每天", 1);
         SPECIAL_MAP.put("两天一次", 2);
@@ -126,6 +128,14 @@ public class CustomerInfoTest {
             fieldsMap.put("rest_room_numbers", Pair.of("rest_room_numbers", -1));
             fieldsMap.put("year_income", Pair.of("year_income", -1));
             fieldsMap.put("clear_year_consume", Pair.of("clear_year_consume", -1));
+            if (info.getAutonym()) {
+                try {
+                    String birthday = getBirthday(info.getMobile(), info.getUserId());
+                    fieldsMap.put("birthday", Pair.of("birthday", "'" + birthday + "'"));
+                } catch (Exception e) {
+                    log.error("birthday not found,error mobile:{},userId:{}", info.getMobile(), info.getUserId());
+                }
+            }
             log.info("fields map:{}", fieldsMap);
             String fields = StringUtils.join(fieldsMap.keySet(), ",");
             Collection<Pair> collection = fieldsMap.values();
@@ -157,6 +167,30 @@ public class CustomerInfoTest {
             jdbcTemplate.execute(insertSql);
         } else {
             log.info("userId exists:{}", userId);
+        }
+    }
+
+    private static String getBirthday(Long mobile, String userId) {
+        String sql = "select * from mall_user_name_auth where user_id=?";
+        Map<String, Object> map = jdbcTemplate.queryForMap(sql, userId);
+        String cardId = (String) map.get("card_id");
+        return extractYearMonthDayOfIdCard(cardId);
+    }
+
+    public static String extractYearMonthDayOfIdCard(String cardId) {
+        String year;
+        String month;
+        String day;
+        if (cardId.length() == 15) {
+            year = "19" + cardId.substring(6, 8);
+            month = cardId.substring(8, 10);
+            day = cardId.substring(10, 12);
+            return year + "-" + month + "-" + day;
+        } else {
+            year = cardId.substring(6, 10);
+            month = cardId.substring(10, 12);
+            day = cardId.substring(12, 14);
+            return year + "-" + month + "-" + day;
         }
     }
 }
