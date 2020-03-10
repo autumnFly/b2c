@@ -2,11 +2,13 @@ package com.csair.b2c.cloud.test.learn.java.jdbc;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.fastjson.JSONObject;
+import com.csair.b2c.cloud.test.learn.java.utils.MybatisUtils;
 import static java.util.stream.Collectors.toList;
 import static org.javamaster.b2c.config.BlueMoonConsts.Honor.URL_APP;
 import static org.javamaster.b2c.config.BlueMoonConsts.Honor.URL_MOON;
 import static org.javamaster.b2c.config.BlueMoonConsts.WashingService.PASSWORD;
 import static org.javamaster.b2c.config.BlueMoonConsts.WashingService.USERNAME;
+import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -19,24 +21,12 @@ import java.util.concurrent.TimeUnit;
  * @author yudong
  */
 public class HandlerWashingRecordTest {
-    public static void main(String[] args) throws Exception {
+
+    @Test
+    public void test() {
 
 
-        DruidDataSource moonmallDataSource = new DruidDataSource();
-        moonmallDataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        moonmallDataSource.setUrl(URL_MOON);
-        moonmallDataSource.setUsername(USERNAME);
-        moonmallDataSource.setPassword(PASSWORD);
-        // moonmallDataSource.setUrl(URL_MOON_1);
-        // moonmallDataSource.setUsername(USERNAME);
-        // moonmallDataSource.setPassword(PASSWORD);
-        moonmallDataSource.setInitialSize(10);
-        moonmallDataSource.setMaxActive(20);
-        moonmallDataSource.setMaxWait(10000);
-        moonmallDataSource.setDefaultAutoCommit(true);
-        moonmallDataSource.setRemoveAbandoned(true);
-        moonmallDataSource.setTestOnBorrow(true);
-        moonmallDataSource.setValidationQuery("select now()");
+        DruidDataSource moonmallDataSource = MybatisUtils.getDatasourceJdbcMoonMall();
 
         DruidDataSource appManagerDataSource = new DruidDataSource();
         appManagerDataSource.setDriverClassName("com.mysql.jdbc.Driver");

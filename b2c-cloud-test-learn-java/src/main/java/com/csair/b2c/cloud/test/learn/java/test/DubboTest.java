@@ -1,4 +1,4 @@
-package com.csair.b2c.cloud.test.learn.java.dubbo;
+package com.csair.b2c.cloud.test.learn.java.test;
 
 import cn.com.bluemoon.file.dubbo.service.ImageService;
 import cn.com.bluemoon.mall.activity.dubbo.dto.UserCouponPackageManageDto;
@@ -18,6 +18,12 @@ import cn.com.bluemoon.service.user.service.SsoService;
 import cn.com.bluemoon.training.dubbo.api.CourseBaseApiService;
 import cn.com.bluemoon.wash.dubbo.service.WashLevelTypeService;
 import cn.com.bluemoon.wash.dubbo.service.WashPriceManageService;
+import com.bluemoon.pf.map.dto.AddressDto;
+import com.bluemoon.pf.map.enums.ApiTypeEnums;
+import com.bluemoon.pf.map.sdk.dto.Coordinates;
+import com.bluemoon.pf.map.sdk.dto.ResultBean;
+import com.bluemoon.pf.map.sdk.vo.AddressVo;
+import com.bluemoon.pf.map.service.BasicMapService;
 import com.bluemoon.proxy.service.sms.SmsService;
 import com.csair.b2c.cloud.test.dubbo.provider.api.service.UserDubboService;
 import com.csair.b2c.cloud.test.learn.java.utils.DubboUtils;
@@ -268,6 +274,32 @@ public class DubboTest {
         UserCouponPackageManageDto dto = new UserCouponPackageManageDto();
         dto.setPhone("18826483963");
         Object resObj = service.getUserCouponPackageManagePage(dto);
+        System.out.println(OMUtils.writeValueAsString(resObj, true));
+    }
+
+    @Test
+    public void test25() {
+        DubboCommonService service = DubboUtils.getService(DubboCommonService.class);
+        Object resObj = service.findWashCollectPointsArea("44", "4401", "4440106", "", "五山路261号");
+        System.out.println(OMUtils.writeValueAsString(resObj, true));
+    }
+
+    @Test
+    public void test26() {
+        BasicMapService service = DubboUtils.getService(BasicMapService.class, "1.0.0");
+        AddressDto addressDto = new AddressDto();
+        addressDto.setAddress("广东省广州市天河区五山路261号中公教育大厦");
+        ResultBean<AddressVo> resObj = service.geocoder(addressDto, ApiTypeEnums.amap);
+        System.out.println(OMUtils.writeValueAsString(resObj, true));
+    }
+
+    @Test
+    public void test27() {
+        BasicMapService service = DubboUtils.getService(BasicMapService.class, "1.0.0");
+        Coordinates coordinates = new Coordinates();
+        coordinates.setLat(21.676639);
+        coordinates.setLng(110.196151);
+        Object resObj = service.regeocoder(coordinates, ApiTypeEnums.amap);
         System.out.println(OMUtils.writeValueAsString(resObj, true));
     }
 

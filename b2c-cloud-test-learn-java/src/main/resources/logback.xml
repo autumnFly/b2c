@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{80} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="infoAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>D:\\home\\logs\\learn-java.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>D:\\home\\logs\\learn-java.%d{yyyy-MM-dd-HH}.log.zip
+            </FileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{80} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="stdout"/>
+    </root>
+
+    <logger name="cn.com.bluemoon" level="info">
+        <appender-ref ref="infoAppender"/>
+    </logger>
+
+    <logger name="com.csair.b2c" level="info">
+        <appender-ref ref="infoAppender"/>
+    </logger>
+
+</configuration>

@@ -140,6 +140,7 @@ public class MybatisUtils {
             return dataSourceJdbcMoonMall;
         }
         dataSourceJdbcMoonMall = druidDataSource(BlueMoonConsts.Honor.URL_MOON, BlueMoonConsts.WashingService.USERNAME, BlueMoonConsts.WashingService.PASSWORD);
+        // dataSourceJdbcMoonMall = druidDataSource(BlueMoonConsts.Honor.URL_MOON_1, BlueMoonConsts.WashingService.USERNAME, BlueMoonConsts.WashingService.PASSWORD);
         return dataSourceJdbcMoonMall;
     }
 
@@ -152,8 +153,7 @@ public class MybatisUtils {
     }
 
     public static DruidDataSource druidDataSource(String url, String username, String password) {
-        DruidDataSource dataSource;
-        dataSource = new DruidDataSource();
+        DruidDataSource dataSource = new DruidDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl(url);
         dataSource.setUsername(username);

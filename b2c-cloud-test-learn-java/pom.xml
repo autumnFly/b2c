@@ -122,7 +122,8 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>dubbo</artifactId>
-            <version>2.8.4</version>
+<!--            <version>2.8.4</version>-->
+            <version>2.8.4.BM-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.sgroschupf</groupId>
@@ -328,6 +329,11 @@
             <artifactId>service-mall-activity-api</artifactId>
             <version>0.0.3-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.bluemoon.pf</groupId>
+            <artifactId>pf-map-api</artifactId>
+            <version>1.0.7</version>
+        </dependency>
         <!--解决至尊项目dubbo报zookeeper找不到问题,加入下列依赖并重新导入-->
         <!--<dependency>-->
         <!--<groupId>org.apache.zookeeper</groupId>-->
@@ -365,6 +371,10 @@
                 <includes>
                     <include>**/*.xml</include>
                 </includes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>

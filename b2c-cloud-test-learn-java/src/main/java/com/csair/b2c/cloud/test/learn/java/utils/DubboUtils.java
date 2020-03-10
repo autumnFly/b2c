@@ -8,6 +8,7 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import static org.javamaster.b2c.config.BlueMoonConsts.Dubbo.ZOOKEEPER_ADDRESS;
 import static org.javamaster.b2c.config.BlueMoonConsts.Dubbo.ZOOKEEPER_ADDRESS_1;
+import static org.javamaster.b2c.config.BlueMoonConsts.Dubbo.ZOOKEEPER_ADDRESS_2;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -25,6 +26,8 @@ public class DubboUtils {
     // private static final String ADDRESS = ZOOKEEPER_ADDRESS;
     private static final String ADDRESS = ZOOKEEPER_ADDRESS_1;
     // private static final String ADDRESS = ZOOKEEPER_ADDRESS_2;
+
+    private static ReferenceConfig<GenericService> referenceConfigCache;
 
     static {
         application.setName("b2c-cloud-test-lean-java");
@@ -60,19 +63,22 @@ public class DubboUtils {
     }
 
     private static ReferenceConfig getReferenceConfig(Class<?> interfaceClass, String group, String version, String hostPort) {
+        if (referenceConfigCache != null) {
+            return referenceConfigCache;
+        }
         String referenceKey = interfaceClass.getName();
-        ReferenceConfig referenceConfig = new ReferenceConfig<>();
-        referenceConfig.setApplication(application);
-        referenceConfig.setRegistry(getRegistryConfig(group, version));
-        referenceConfig.setInterface(interfaceClass);
-        referenceConfig.setVersion(version);
-        referenceConfig.setTimeout(300000);
-        referenceConfig.setGeneric(true);
+        referenceConfigCache = new ReferenceConfig<>();
+        referenceConfigCache.setApplication(application);
+        referenceConfigCache.setRegistry(getRegistryConfig(group, version));
+        referenceConfigCache.setInterface(interfaceClass);
+        referenceConfigCache.setVersion(version);
+        referenceConfigCache.setTimeout(300000);
+        referenceConfigCache.setGeneric(true);
         if (hostPort != null) {
             String url = String.format("dubbo://%s/%s", hostPort, referenceKey);
-            referenceConfig.setUrl(url);
+            referenceConfigCache.setUrl(url);
         }
-        return referenceConfig;
+        return referenceConfigCache;
     }
 
     private static RegistryConfig getRegistryConfig(String group, String version) {
