@@ -2,6 +2,7 @@ package com.csair.b2c.cloud.test.learn.java.test;
 
 import com.bluemoon.pf.map.sdk.dto.Coordinates;
 import com.csair.b2c.cloud.test.learn.java.utils.AmapUtils;
+import com.csair.b2c.cloud.test.learn.java.utils.PositionUtils;
 import org.javamaster.b2c.config.BlueMoonConsts;
 import org.junit.Test;
 
@@ -74,6 +75,15 @@ public class GaodeTest {
 
     @Test
     public void test2() {
+        // 113.852047057707,22.511171597629
+        double lng = 113.858529;
+        double lat = 22.517206;
+        System.out.println(PositionUtils.bd09_To_Gcj02(lat, lng));
+        System.out.println(PositionUtils.bd092GCJ(lat, lng));
+    }
+
+    @Test
+    public void test3() {
         try {
             List<String> addresses = Arrays.asList(
                     "广东省广州市天河区五山路31号东莞xx信息科技有限公司"

@@ -12,6 +12,7 @@ import cn.com.bluemoon.mallwash.order.dubbo.service.WashOrderService;
 import cn.com.bluemoon.mallwash.order.dubbo.vo.WashOrderDetailVo;
 import cn.com.bluemoon.service.common.service.RegionService;
 import cn.com.bluemoon.service.customizingorder.api.CustomizingOrderDubboService;
+import cn.com.bluemoon.service.emp.api.MapService;
 import cn.com.bluemoon.service.mallcrm.service.message.MesssagePushService;
 import cn.com.bluemoon.service.station.api.DubboCommonService;
 import cn.com.bluemoon.service.user.service.SsoService;
@@ -291,16 +292,31 @@ public class DubboTest {
         addressDto.setAddress("广东省广州市天河区五山路261号中公教育大厦");
         ResultBean<AddressVo> resObj = service.geocoder(addressDto, ApiTypeEnums.amap);
         System.out.println(OMUtils.writeValueAsString(resObj, true));
+        Coordinates coordinates = new Coordinates();
+        coordinates.setLng(123.525270);
+        coordinates.setLat(42.045748);
+        Object resObj1 = service.regeocoder(coordinates, ApiTypeEnums.amap);
+        System.out.println(OMUtils.writeValueAsString(resObj1, true));
     }
 
     @Test
-    public void test27() {
+    public void test27() throws Exception {
         BasicMapService service = DubboUtils.getService(BasicMapService.class, "1.0.0");
         Coordinates coordinates = new Coordinates();
-        coordinates.setLat(21.676639);
-        coordinates.setLng(110.196151);
+        // coordinates.setLng(113.346108960161);
+        // coordinates.setLat(23.1473462711974);
+        coordinates.setLng(113.346380);
+        coordinates.setLat(23.147320);
         Object resObj = service.regeocoder(coordinates, ApiTypeEnums.amap);
         System.out.println(OMUtils.writeValueAsString(resObj, true));
     }
+
+    @Test
+    public void test28() throws Exception {
+        MapService mapService = DubboUtils.getService(MapService.class);
+        Object resObj = mapService.getAddressByPoint(123.525270, 42.045748);
+        System.out.println(OMUtils.writeValueAsString(resObj, true));
+    }
+
 
 }

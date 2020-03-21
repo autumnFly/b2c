@@ -34,7 +34,7 @@ public class DubboUtils {
     }
 
     public static <T> T getService(Class<T> clazz) {
-        return getService(clazz, "1.0.0", null);
+        return getService(clazz, null, null);
     }
 
     public static <T> T getService(Class<T> clazz, String version) {

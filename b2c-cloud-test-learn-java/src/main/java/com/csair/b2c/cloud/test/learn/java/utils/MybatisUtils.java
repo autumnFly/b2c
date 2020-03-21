@@ -28,6 +28,7 @@ public class MybatisUtils {
     private static DruidDataSource dataSourceJdbcWashingService;
     private static DruidDataSource dataSourceJdbcWashMall;
     private static DruidDataSource dataSourceJdbcOnlineExam;
+    private static DruidDataSource dataSourceJdbcB2b2cMall;
 
     private static SqlSessionFactory sqlSessionFactory;
     private static SqlSession sqlSession;
@@ -35,6 +36,7 @@ public class MybatisUtils {
     private static JdbcTemplate jdbcTemplateSakila;
     private static JdbcTemplate jdbcTemplateWashMall;
     private static JdbcTemplate jdbcTemplateMoonMall;
+    private static JdbcTemplate jdbcTemplateB2b2cMall;
 
     public static SqlSessionFactory getSqlSessionFactory() {
         if (sqlSessionFactory != null) {
@@ -85,6 +87,14 @@ public class MybatisUtils {
         }
         jdbcTemplateMoonMall = new JdbcTemplate(getDatasourceJdbcMoonMall());
         return jdbcTemplateMoonMall;
+    }
+
+    public static JdbcTemplate getJdbcTemplateB2b2cMall() {
+        if (jdbcTemplateB2b2cMall != null) {
+            return jdbcTemplateB2b2cMall;
+        }
+        jdbcTemplateB2b2cMall = new JdbcTemplate(getDatasourceJdbcB2b2cMall());
+        return jdbcTemplateB2b2cMall;
     }
 
     public static DruidDataSource getDatasourceMicrowebsite() {
@@ -150,6 +160,14 @@ public class MybatisUtils {
         }
         dataSourceJdbcOnlineExam = druidDataSource(BlueMoonConsts.Local.URL_ONLINE_EXAM, BlueMoonConsts.Local.USERNAME, BlueMoonConsts.Local.PASSWORD);
         return dataSourceJdbcOnlineExam;
+    }
+
+    public static DruidDataSource getDatasourceJdbcB2b2cMall() {
+        if (dataSourceJdbcB2b2cMall != null) {
+            return dataSourceJdbcB2b2cMall;
+        }
+        dataSourceJdbcB2b2cMall = druidDataSource(BlueMoonConsts.Honor.URL_B2B2C_MALL, BlueMoonConsts.WashingService.USERNAME, BlueMoonConsts.WashingService.PASSWORD);
+        return dataSourceJdbcB2b2cMall;
     }
 
     public static DruidDataSource druidDataSource(String url, String username, String password) {
