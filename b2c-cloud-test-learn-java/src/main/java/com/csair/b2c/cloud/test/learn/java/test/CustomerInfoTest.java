@@ -42,7 +42,7 @@ public class CustomerInfoTest {
         handlerList(list);
     }
 
-    private MallAdviserCustomerInfo convert(ResultSet rs) throws SQLException {
+    public static MallAdviserCustomerInfo convert(ResultSet rs) throws SQLException {
         MallAdviserCustomerInfo info = new MallAdviserCustomerInfo();
         info.setId(rs.getLong("id"));
         info.setMobile(rs.getLong("mobile"));
@@ -57,9 +57,10 @@ public class CustomerInfoTest {
         return info;
     }
 
-    private static final List<String> SPECIAL_LIST = Arrays.asList("machine_wash_frequency", "hand_wash_frequency", "preprocessing_frequency");
-    private static final Map<String, Integer> SPECIAL_MAP = Maps.newLinkedHashMap();
-    private static final Pattern PATTERN = Pattern.compile("[0-9]+");
+    public static final List<String> SPECIAL_LIST = Arrays.asList("machine_wash_frequency", "hand_wash_frequency", "preprocessing_frequency");
+    public static final Map<String, Integer> SPECIAL_MAP = Maps.newLinkedHashMap();
+    public static final Pattern PATTERN = Pattern.compile("[0-9]+");
+    public static final List<String> UNKNOWN_LIST = Arrays.asList("disturb", "is_used_to_sterilize", "is_need_softener", "is_stain_cleaner", "adult_numbers");
 
     static {
         SPECIAL_MAP.put("每天", 1);
@@ -86,68 +87,70 @@ public class CustomerInfoTest {
                 continue;
             }
             JsonNode dataNode = jsonNode.get("data");
-            Map<String, Pair> fieldsMap = Maps.newHashMap();
-            Iterator<Map.Entry<String, JsonNode>> iterator = dataNode.fields();
-            while (iterator.hasNext()) {
-                Map.Entry<String, JsonNode> entry = iterator.next();
-                String type = entry.getKey();
-                String label = entry.getValue().asText();
-                if (SPECIAL_LIST.contains(type)) {
-                    Integer value = SPECIAL_MAP.get(label);
-                    if (value != null) {
-                        fieldsMap.put(type, Pair.of(label, value));
-                    } else {
-                        String tmpLabel = label.replace("天/次", "");
-                        if (PATTERN.matcher(tmpLabel).find()) {
-                            fieldsMap.put(type, Pair.of(label, Integer.parseInt(tmpLabel)));
-                        } else {
-                            log.error("field illegal,error mobile:{},type:{},label:{}", info.getMobile(), type, label);
-                        }
-                    }
-                } else {
-                    if (StringUtils.isNotBlank(label)) {
-                        try {
-                            Map<String, Object> dictMap = jdbcTemplate.queryForMap("select * from sys_dict where type=? and label=?", under2camel(type), label);
-                            byte value = Byte.parseByte(dictMap.get("value").toString());
-                            fieldsMap.put(type, Pair.of(label, value));
-                        } catch (Exception e) {
-                            log.error("dict not found,error mobile:{},userId:{},type:{},label:{}", info.getMobile(), info.getUserId(), type, label);
-                            continue outer;
-                        }
-                    } else {
-                        fieldsMap.put(type, Pair.of(label, -1));
-
-                    }
-                }
-            }
-            fieldsMap.put("user_id", Pair.of("user_id", "'" + info.getUserId() + "'"));
-            fieldsMap.put("work_industry", Pair.of("work_industry", -1));
-            fieldsMap.put("room_numbers", Pair.of("room_numbers", -1));
-            fieldsMap.put("hall_numbers", Pair.of("hall_numbers", -1));
-            fieldsMap.put("kitchen_numbers", Pair.of("kitchen_numbers", -1));
-            fieldsMap.put("rest_room_numbers", Pair.of("rest_room_numbers", -1));
-            fieldsMap.put("year_income", Pair.of("year_income", -1));
-            fieldsMap.put("clear_year_consume", Pair.of("clear_year_consume", -1));
-            if (info.getAutonym()) {
-                try {
-                    String birthday = getBirthday(info.getMobile(), info.getUserId());
-                    fieldsMap.put("birthday", Pair.of("birthday", "'" + birthday + "'"));
-                } catch (Exception e) {
-                    log.error("birthday not found,error mobile:{},userId:{}", info.getMobile(), info.getUserId());
-                }
-            }
-            log.info("fields map:{}", fieldsMap);
-            String fields = StringUtils.join(fieldsMap.keySet(), ",");
-            Collection<Pair> collection = fieldsMap.values();
-            String values = StringUtils.join(collection.stream().map(Pair::getRight).collect(Collectors.toList()), ",");
-            String sql = String.format("insert into mall_adviser_customer_additional_info(%s) values (%s)", fields, values);
-            log.info("insert sql:{}", sql);
-            save(info.getUserId(), sql);
+            handlerData(dataNode, info.getMobile(), info.getUserId());
         }
     }
 
+    public static void handlerData(JsonNode dataNode, Long mobile, String userId) {
+        Map<String, Pair> fieldsMap = Maps.newHashMap();
+        Iterator<Map.Entry<String, JsonNode>> iterator = dataNode.fields();
+        while (iterator.hasNext()) {
+            Map.Entry<String, JsonNode> entry = iterator.next();
+            String type = entry.getKey();
+            String label = entry.getValue().asText();
+            if (SPECIAL_LIST.contains(type)) {
+                Integer value = SPECIAL_MAP.get(label);
+                if (value != null) {
+                    fieldsMap.put(type, Pair.of(label, value));
+                } else {
+                    String tmpLabel = label.replace("天/次", "");
+                    if (PATTERN.matcher(tmpLabel).find()) {
+                        fieldsMap.put(type, Pair.of(label, Integer.parseInt(tmpLabel)));
+                    } else {
+                        log.error("field illegal,error mobile:{},type:{},label:{}", mobile, type, label);
+                    }
+                }
+            } else {
+                if (StringUtils.isNotBlank(label)) {
+                    try {
+                        Map<String, Object> dictMap = jdbcTemplate.queryForMap("select * from sys_dict where type=? and label=?", under2camel(type), label);
+                        byte value = Byte.parseByte(dictMap.get("value").toString());
+                        fieldsMap.put(type, Pair.of(label, value));
+                    } catch (Exception e) {
+                        log.error("dict not found,error mobile:{},userId:{},type:{},label:{}", mobile, userId, type, label);
+                        return;
+                    }
+                } else {
+                    fieldsMap.put(type, Pair.of(label, -1));
 
-    private static String under2camel(String s) {
+                }
+            }
+        }
+        fieldsMap.put("user_id", Pair.of("user_id", "'" + userId + "'"));
+        fieldsMap.put("work_industry", Pair.of("work_industry", -1));
+        fieldsMap.put("room_numbers", Pair.of("room_numbers", -1));
+        fieldsMap.put("hall_numbers", Pair.of("hall_numbers", -1));
+        fieldsMap.put("kitchen_numbers", Pair.of("kitchen_numbers", -1));
+        fieldsMap.put("rest_room_numbers", Pair.of("rest_room_numbers", -1));
+        fieldsMap.put("year_income", Pair.of("year_income", -1));
+        fieldsMap.put("clear_year_consume", Pair.of("clear_year_consume", -1));
+        try {
+            String birthday = getBirthday(userId);
+            fieldsMap.put("birthday", Pair.of("birthday", "'" + birthday + "'"));
+        } catch (Exception e) {
+            log.error("birthday not found,error mobile:{},userId:{}", mobile, userId);
+        }
+        log.info("fields map:{}", fieldsMap);
+        String fields = StringUtils.join(fieldsMap.keySet(), ",");
+        Collection<Pair> collection = fieldsMap.values();
+        String values = StringUtils.join(collection.stream().map(Pair::getRight).collect(Collectors.toList()), ",");
+        String sql = String.format("insert into mall_adviser_customer_additional_info(%s) values (%s)", fields, values);
+        log.info("insert sql:{}", sql);
+        save(userId, sql);
+    }
+
+
+    public static String under2camel(String s) {
         String separator = "_";
         StringBuilder under = new StringBuilder();
         s = s.toLowerCase().replace(separator, " ");
@@ -160,7 +163,7 @@ public class CustomerInfoTest {
         return under.toString();
     }
 
-    private static void save(String userId, String insertSql) {
+    public static void save(String userId, String insertSql) {
         String sql = "select count(*) num from mall_adviser_customer_additional_info where user_id=?";
         Long num = (Long) jdbcTemplate.queryForMap(sql, userId).get("num");
         if (num == 0) {
@@ -170,7 +173,7 @@ public class CustomerInfoTest {
         }
     }
 
-    private static String getBirthday(Long mobile, String userId) {
+    public static String getBirthday(String userId) {
         String sql = "select * from mall_user_name_auth where user_id=?";
         Map<String, Object> map = jdbcTemplate.queryForMap(sql, userId);
         String cardId = (String) map.get("card_id");
