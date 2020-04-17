@@ -20,27 +20,31 @@ import java.io.Serializable;
 public class RedisUtils {
 
     public static JedisConnectionFactory factoryDev;
-    public static RedisTemplate redisTemplateDev;
+    public static RedisTemplate<Object, Object> redisTemplateDev;
     public static JedisConnectionFactory factoryTest;
     public static JedisConnectionFactory factoryTestCluster;
-    public static RedisTemplate redisTemplateTest;
-    public static RedisTemplate redisTemplateClusterTest;
+    public static RedisTemplate<Object, Object> redisTemplateTest;
+    public static RedisTemplate<Object, Object> redisTemplateClusterTest;
     public static JedisConnectionFactory factory;
-    public static RedisTemplate redisTemplate;
+    public static RedisTemplate<Object, Object> redisTemplate;
 
     static {
-        Pair<JedisConnectionFactory, RedisTemplate> pairDev = redisTemplate(BlueMoonConsts.Local.REDIS_URL, BlueMoonConsts.Local.REDIS_PORT, BlueMoonConsts.Local.PASSWORD);
+        Pair<JedisConnectionFactory, RedisTemplate<Object, Object>> pairDev = redisTemplate(BlueMoonConsts.Local.REDIS_URL,
+                BlueMoonConsts.Local.REDIS_PORT, BlueMoonConsts.Local.PASSWORD);
         factoryDev = pairDev.getKey();
         redisTemplateDev = pairDev.getValue();
 
-        Pair<JedisConnectionFactory, RedisTemplate> pairTest = redisTemplate(BlueMoonConsts.WashingService.REDIS_URL, BlueMoonConsts.WashingService.REDIS_PORT, BlueMoonConsts.WashingService.REDIS_PASSWORD);
+        Pair<JedisConnectionFactory, RedisTemplate<Object, Object>> pairTest = redisTemplate(BlueMoonConsts.WashingService.REDIS_URL,
+                BlueMoonConsts.WashingService.REDIS_PORT, BlueMoonConsts.WashingService.REDIS_PASSWORD);
         factoryTest = pairTest.getKey();
         redisTemplateTest = pairTest.getValue();
 
-        Pair<JedisConnectionFactory, RedisTemplate> pairClusterTest = redisTemplateCluster(BlueMoonConsts.Honor.REDIS_CLUSTER_2, BlueMoonConsts.Honor.REDIS_CLUSTER_PASSWD);
+        Pair<JedisConnectionFactory, RedisTemplate<Object, Object>> pairClusterTest = redisTemplateCluster(BlueMoonConsts.Honor.REDIS_CLUSTER_2,
+                BlueMoonConsts.Honor.REDIS_CLUSTER_PASSWD);
         factoryTestCluster = pairClusterTest.getKey();
         redisTemplateClusterTest = pairClusterTest.getValue();
-        // Pair<JedisConnectionFactory, RedisTemplate> pair = redisTemplate(BlueMoonConsts.WashingService.REDIS_URL_2, BlueMoonConsts.WashingService.REDIS_PORT_2, BlueMoonConsts.WashingService.REDIS_PASSWORD_2);
+        // Pair<JedisConnectionFactory, RedisTemplate> pair = redisTemplate(BlueMoonConsts.WashingService.REDIS_URL_2,
+        // BlueMoonConsts.WashingService.REDIS_PORT_2, BlueMoonConsts.WashingService.REDIS_PASSWORD_2);
         // factory = pairPrd.getKey();
         // redisTemplate = pair.getValue();
     }
@@ -57,14 +61,14 @@ public class RedisUtils {
         return SerializationUtils.deserialize(bytes);
     }
 
-    private static Pair<JedisConnectionFactory, RedisTemplate> redisTemplate(String host, int port, String password) {
+    private static Pair<JedisConnectionFactory, RedisTemplate<Object, Object>> redisTemplate(String host, int port, String password) {
         JedisConnectionFactory factory = new JedisConnectionFactory();
         factory.setHostName(host);
         factory.setPort(port);
         factory.setPassword(password);
         factory.afterPropertiesSet();
 
-        RedisTemplate redisTemplate = new RedisTemplate();
+        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
         redisTemplate.setConnectionFactory(factory);
@@ -72,7 +76,7 @@ public class RedisUtils {
         return Pair.of(factory, redisTemplate);
     }
 
-    private static Pair<JedisConnectionFactory, RedisTemplate> redisTemplateCluster(String clusterUrl, String password) {
+    private static Pair<JedisConnectionFactory, RedisTemplate<Object, Object>> redisTemplateCluster(String clusterUrl, String password) {
         RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();
         String[] urls = clusterUrl.split(",");
         for (String str : urls) {
@@ -83,7 +87,7 @@ public class RedisUtils {
         factory.setPassword(password);
         factory.afterPropertiesSet();
 
-        RedisTemplate redisTemplate = new RedisTemplate();
+        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         redisTemplate.setConnectionFactory(factory);

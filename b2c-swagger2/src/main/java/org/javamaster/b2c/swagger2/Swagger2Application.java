@@ -17,6 +17,7 @@ public class Swagger2Application {
 
     public static void main(String[] args) {
         SpringApplication.run(Swagger2Application.class, args);
+        System.out.println("http://localhost:8258/home/login?username=root&password=root");
     }
 
 }

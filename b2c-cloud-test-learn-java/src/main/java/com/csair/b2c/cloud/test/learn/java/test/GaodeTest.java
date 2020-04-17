@@ -22,8 +22,8 @@ public class GaodeTest {
 
     @Test
     public void test() throws Exception {
-        double longitude = 110.19615173339845;
-        double latitude = 21.676639556884766;
+        double longitude = 113.350255;
+        double latitude = 23.147079;
         String url = "https://restapi.amap.com/v3/geocode/regeo";
         String params = "key=" + BlueMoonConsts.Map.GAODE_KEY + "&output=JSON&location=" + longitude + "," + latitude;
         StringBuilder result = new StringBuilder();

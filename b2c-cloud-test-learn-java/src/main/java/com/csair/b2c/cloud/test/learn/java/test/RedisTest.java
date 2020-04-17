@@ -2,6 +2,7 @@ package com.csair.b2c.cloud.test.learn.java.test;
 
 import com.csair.b2c.cloud.test.learn.java.utils.RedisUtils;
 import org.junit.Test;
+import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.connection.RedisClusterConnection;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -39,17 +40,28 @@ public class RedisTest {
     @Test
     public void test2() {
         RedisTemplate redisTemplate = RedisUtils.redisTemplateClusterTest;
-        System.out.println(redisTemplate.opsForValue().get("BM_EC:service_app_manager:U18101210443058835251:name"));
+        System.out.println(redisTemplate.opsForValue().get("BM_EC:service_app_manager:null:name"));
     }
 
     @Test
     public void test3() {
         JedisConnectionFactory factory = RedisUtils.factoryTestCluster;
         RedisClusterConnection connection = factory.getClusterConnection();
-        Set<byte[]> keys = connection.keys("BM_EC:service_app_manager*".getBytes(StandardCharsets.UTF_8));
+        Set<byte[]> keys = connection.keys("washing:mana:*".getBytes(StandardCharsets.UTF_8));
         for (byte[] key : keys) {
-            System.out.println(new String(key));
-            System.out.println(new String(connection.get(key)));
+            DataType dataType = connection.type(key);
+            System.out.println(new String(key) + " " + dataType.code());
+            if (dataType == DataType.HASH) {
+                connection.hGetAll(key).forEach((hkey, hvalue) -> {
+                    System.out.println(new String(hkey) + " " + new String(hvalue));
+                });
+            } else if (dataType == DataType.SET) {
+                for (byte[] sMember : connection.sMembers(key)) {
+                    System.out.println(new String(sMember));
+                }
+            } else {
+                System.out.println(new String(key));
+            }
         }
     }
 

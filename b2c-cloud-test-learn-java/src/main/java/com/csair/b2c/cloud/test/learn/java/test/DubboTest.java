@@ -19,6 +19,7 @@ import cn.com.bluemoon.service.user.service.SsoService;
 import cn.com.bluemoon.training.dubbo.api.CourseBaseApiService;
 import cn.com.bluemoon.wash.dubbo.service.WashLevelTypeService;
 import cn.com.bluemoon.wash.dubbo.service.WashPriceManageService;
+import com.bluemoon.kafka.dubbo.api.MessageQueueService;
 import com.bluemoon.pf.map.dto.AddressDto;
 import com.bluemoon.pf.map.enums.ApiTypeEnums;
 import com.bluemoon.pf.map.sdk.dto.Coordinates;
@@ -172,8 +173,8 @@ public class DubboTest {
 
     @Test
     public void test13() {
-        WashOrderService service = DubboUtils.getService(WashOrderService.class, "1.0.0", SERVER_3);
-        List<WashOrderDetailVo> resObj = service.getWashOrderDetailByOuterCode("TW190826084340508901");
+        WashOrderService service = DubboUtils.getService(WashOrderService.class, "1.0.0-yudong");
+        Object resObj = service.getWashOrderPayInfos("U2003031940286000001");
         System.out.println(OMUtils.writeValueAsString(resObj, true));
     }
 
@@ -292,11 +293,6 @@ public class DubboTest {
         addressDto.setAddress("广东省广州市天河区五山路261号中公教育大厦");
         ResultBean<AddressVo> resObj = service.geocoder(addressDto, ApiTypeEnums.amap);
         System.out.println(OMUtils.writeValueAsString(resObj, true));
-        Coordinates coordinates = new Coordinates();
-        coordinates.setLng(123.525270);
-        coordinates.setLat(42.045748);
-        Object resObj1 = service.regeocoder(coordinates, ApiTypeEnums.amap);
-        System.out.println(OMUtils.writeValueAsString(resObj1, true));
     }
 
     @Test
@@ -318,5 +314,14 @@ public class DubboTest {
         System.out.println(OMUtils.writeValueAsString(resObj, true));
     }
 
+    @Test
+    public void test29() throws Exception {
+        MessageQueueService service = DubboUtils.getService(MessageQueueService.class,"1.3.6");
+        JSONObject json = new JSONObject();
+        json.put("clothesCode", "20200407hd001");
+        json.put("reportCode", "2004070003");
+        Object resObj = service.sendMessage("clothes_conmunication_notice", json.toString(), true);
+        System.out.println(OMUtils.writeValueAsString(resObj, true));
+    }
 
 }

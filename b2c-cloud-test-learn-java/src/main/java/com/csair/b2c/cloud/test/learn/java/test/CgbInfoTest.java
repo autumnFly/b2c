@@ -3,6 +3,7 @@ package com.csair.b2c.cloud.test.learn.java.test;
 import com.csair.b2c.cloud.test.learn.java.model.CgbAngelInfo;
 import com.csair.b2c.cloud.test.learn.java.utils.MybatisUtils;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.javamaster.b2c.config.BlueMoonConsts;
@@ -32,7 +33,7 @@ public class CgbInfoTest {
 
     @Test
     public void test() {
-        List<CgbAngelInfo> list = jdbcTemplate.query("select * from cgb_angel_info",
+        List<CgbAngelInfo> list = jdbcTemplate.query("select * from cgb_angel_info where op_time >= '2020-03-30 00:00:00' and created_time<'2020-03-30 00:00:00'",
                 new Object[]{},
                 (rs, rowNum) -> convert(rs));
         list = new ArrayList<>(new HashSet<>(list));
@@ -50,6 +51,11 @@ public class CgbInfoTest {
         info.setLongitude(rs.getString("longitude"));
         info.setLatitude(rs.getString("latitude"));
         info.setValid(rs.getInt("valid"));
+        info.setProvinceName(rs.getString("province_name"));
+        info.setCityName(rs.getString("city_name"));
+        info.setCountyName(rs.getString("county_name"));
+        info.setReceiveAddrName(rs.getString("receive_addr_name"));
+        info.setReceiveAddr(rs.getString("receive_addr"));
         return info;
     }
 
@@ -82,5 +88,56 @@ public class CgbInfoTest {
             logger1.info("{}", sql);
             jdbcTemplate.execute(sql);
         }
+    }
+
+
+    @Test
+    public void test1() {
+        List<CgbAngelInfo> list = jdbcTemplate.query("select * from cgb_angel_info where longitude is null and province_name is not null and created_time >= '2020-03-30 00:00:00'",
+                new Object[]{},
+                (rs, rowNum) -> convert(rs));
+        list = new ArrayList<>(new HashSet<>(list));
+        handlerBlank(list);
+    }
+
+    private void handlerBlank(List<CgbAngelInfo> list) {
+        String url = "https://restapi.amap.com/v3/geocode/geo";
+        String key = BlueMoonConsts.Map.GAODE_KEY_2;
+        outer:
+        for (CgbAngelInfo cgbAngelInfo : list) {
+            String address;
+            JsonNode jsonNode;
+            if (cgbAngelInfo.getReceiveAddr().contains("省")) {
+                address = cgbAngelInfo.getReceiveAddr();
+                String params = "key=" + key + "&output=JSON" + "&address=" + address;
+                jsonNode = restTemplate.getForObject(url + "?" + params, JsonNode.class);
+            } else {
+                address = cgbAngelInfo.getProvinceName() + cgbAngelInfo.getCityName() + cgbAngelInfo.getCountyName();
+                if (StringUtils.isBlank(cgbAngelInfo.getReceiveAddrName())) {
+                    address += cgbAngelInfo.getReceiveAddr();
+                } else {
+                    address += cgbAngelInfo.getReceiveAddrName();
+                }
+                String params = "key=" + key + "&output=JSON" + "&address=" + address;
+                jsonNode = restTemplate.getForObject(url + "?" + params, JsonNode.class);
+            }
+            logger.info("id:{},address:{}", cgbAngelInfo.getId(), address);
+            if (!"OK".equals(jsonNode.get("info").asText())) {
+                log.error("wrong:{},res:{}", cgbAngelInfo.getUserid(), jsonNode);
+                continue;
+            }
+            ArrayNode jsonArray = (ArrayNode) jsonNode.get("geocodes");
+            String location = jsonArray.get(0).get("location").asText();
+            if (StringUtils.isBlank(location)) {
+                log.error("wrong:{},res:{}", cgbAngelInfo.getUserid(), jsonNode);
+                continue outer;
+            }
+            String[] strs = location.split(",");
+            String sql = "update cgb_angel_info set longitude='%s',latitude='%s' where id=%s";
+            sql = String.format(sql, strs[0], strs[1], cgbAngelInfo.getId());
+            logger1.info("{}", sql);
+            jdbcTemplate.execute(sql);
+        }
+
     }
 }
