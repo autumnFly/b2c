@@ -1,10 +1,13 @@
 #!/bin/bash
 # arthas在线教程文档
 https://alibaba.github.io/arthas/
+https://arthas.gitee.io/
 
-# 调用静态函数
+# 调用静态方法
 ognl '@java.lang.System@out.println("hello world")'
 ognl '@java.lang.Math@random()'
+ognl "@java.lang.Thread@currentThread()"
+ognl "@java.lang.Thread@currentThread().getContextClassLoader()"
 
 # 获取类的静态字段
 ognl '@java.lang.System@out'
@@ -42,9 +45,17 @@ monitor -c 5 org.javamaster.b2c.swagger2.controller.LoginController login
 
 # 同时观察方法调用前和方法返回后的值
 watch org.javamaster.b2c.swagger2.controller.LoginController login {params,target,returnObj} -x 2 -b -s -n 2
+# ognl方式:查看第一个参数
+watch org.javamaster.b2c.swagger2.controller.LoginController login "params[0]"
+# ognl方式:按username方式投影
+watch org.javamaster.b2c.swagger2.controller.LoginController login "params[0].{#this.username}"
+# ognl方式:按条件过滤
+watch org.javamaster.b2c.swagger2.controller.LoginController login "params[0].{? #this.username=='root' }" -x -2
 
 # 输出当前方法被调用的调用路径
 stack org.javamaster.b2c.swagger2.controller.LoginController login
+# 按条件过滤
+stack org.javamaster.b2c.swagger2.controller.LoginController login "params[0].username=='root'"
 
 # 记录下指定方法每次调用的入参和返回信息
 tt -t org.javamaster.b2c.swagger2.controller.LoginController login

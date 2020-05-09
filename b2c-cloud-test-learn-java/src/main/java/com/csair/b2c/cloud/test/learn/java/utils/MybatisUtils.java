@@ -45,8 +45,8 @@ public class MybatisUtils {
         try {
             SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
             sessionFactory.setDataSource(getDatasourceMicrowebsite());
-            final String MAPPER_LOCATION = "classpath*:mapper/**/*.xml";
-            sessionFactory.setMapperLocations(resourcePatternResolver.getResources(MAPPER_LOCATION));
+            final String mapperLocation = "classpath*:mapper/**/*.xml";
+            sessionFactory.setMapperLocations(resourcePatternResolver.getResources(mapperLocation));
             sessionFactory.setTransactionFactory(new JdbcTransactionFactory());
             String configLocation = "classpath*:mybatis-config.xml";
             sessionFactory.setConfigLocation(resourcePatternResolver.getResources(configLocation)[0]);
@@ -126,6 +126,7 @@ public class MybatisUtils {
             return dataSourceJdbcWashingService;
         }
         dataSourceJdbcWashingService = druidDataSource(BlueMoonConsts.WashingService.URL, BlueMoonConsts.WashingService.USERNAME, BlueMoonConsts.WashingService.PASSWORD);
+        // dataSourceJdbcWashingService = druidDataSource(URL_SAKILA, BlueMoonConsts.Local.USERNAME, BlueMoonConsts.Local.PASSWORD);
         return dataSourceJdbcWashingService;
     }
 

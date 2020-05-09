@@ -7,6 +7,7 @@ import cn.com.bluemoon.common.customizingwash.po.MallWashGoodsServiceConfigExamp
 import cn.com.bluemoon.common.planner.utils.WashingServiceUtils;
 import cn.com.bluemoon.handypoi.excel.enums.ExcelType;
 import cn.com.bluemoon.handypoi.excel.resolve.ExcelReader;
+import com.csair.b2c.cloud.test.learn.java.utils.MybatisUtils;
 import com.google.common.collect.Lists;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.AfterClass;
@@ -37,13 +38,13 @@ public class WashingServiceTest {
     public static void after() {
         sqlSession.commit();
         sqlSession.close();
-        WashingServiceUtils.getDatasourceWashingService().close();
+        MybatisUtils.getDatasourceWashingService().close();
     }
 
     @Test
     public void test() throws Exception {
         MallWashGoodsServiceConfigMapper configMapper = sqlSession.getMapper(MallWashGoodsServiceConfigMapper.class);
-        File file = new File("C:\\Users\\yu\\Desktop\\sku附加服务示例-1127-v4.0.xlsx");
+        File file = new File("D:\\User\\Tencent Files\\375709770\\FileRecv\\sku附加服务示例-v5.0-20200429.xlsx");
         InputStream inputStream = new FileInputStream(file);
         ExcelReader<ClothesBean> excelReader = new ExcelReader<>(ExcelType.XLSX, inputStream, ClothesBean.class, 2, 0);
         String[] serviceNames = new String[1];
@@ -63,7 +64,7 @@ public class WashingServiceTest {
         List<ClothesBean> list = excelReader.getResultList();
 
         Map<String, List<ClothesBean>> map = list.stream()
-                // .filter(clothesBean -> clothesBean.getGoodsCode().equals("080939"))
+                // .filter(clothesBean -> clothesBean.getGoodsCode().equals("010109"))
                 .collect(Collectors.groupingBy(ClothesBean::getGoodsCode));
 
         for (Map.Entry<String, List<ClothesBean>> stringListEntry : map.entrySet()) {
