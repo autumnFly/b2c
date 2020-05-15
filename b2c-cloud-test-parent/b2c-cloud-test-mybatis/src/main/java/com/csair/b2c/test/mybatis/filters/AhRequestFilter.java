@@ -36,7 +36,12 @@ public class AhRequestFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         RequestWrapper requestWrapper = new RequestWrapper((HttpServletRequest) servletRequest);
+        if ("GET".equals(httpServletRequest.getMethod())) {
+            filterChain.doFilter(requestWrapper, servletResponse);
+            return;
+        }
         String reqStr = StreamUtils.copyToString(requestWrapper.getInputStream(), Charsets.UTF_8);
         JsonNode jsonNode = objectMapper.readTree(reqStr);
         ObjectNode objectNode = jsonNode.deepCopy();

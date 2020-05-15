@@ -101,10 +101,10 @@
         <!-- 热部署 当应用程序以完整打包好的JAR或WAR文件形式运行时，开发者工具会被禁用，所以没有必 要在构建生产部署包前移除这个依赖 Spring
     Boot 开发者工具会在重启时排除掉如下目录： /META-INF/resources、 /resources、 /static、 /public和
     /templates。 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-devtools</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>

@@ -9,7 +9,6 @@ import cn.com.bluemoon.mall.user.dubbo.enums.MatchType;
 import cn.com.bluemoon.mall.user.dubbo.service.UserAddressService;
 import cn.com.bluemoon.mall.user.dubbo.service.UserService;
 import cn.com.bluemoon.mallwash.order.dubbo.service.WashOrderService;
-import cn.com.bluemoon.mallwash.order.dubbo.vo.WashOrderDetailVo;
 import cn.com.bluemoon.service.common.service.RegionService;
 import cn.com.bluemoon.service.customizingorder.api.CustomizingOrderDubboService;
 import cn.com.bluemoon.service.emp.api.MapService;
@@ -26,6 +25,7 @@ import com.bluemoon.pf.map.sdk.dto.Coordinates;
 import com.bluemoon.pf.map.sdk.dto.ResultBean;
 import com.bluemoon.pf.map.sdk.vo.AddressVo;
 import com.bluemoon.pf.map.service.BasicMapService;
+import com.bluemoon.proxy.service.sms.EmailService;
 import com.bluemoon.proxy.service.sms.SmsService;
 import com.csair.b2c.cloud.test.dubbo.provider.api.service.UserDubboService;
 import com.csair.b2c.cloud.test.learn.java.utils.DubboUtils;
@@ -34,14 +34,12 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang3.time.DateUtils;
 import static org.javamaster.b2c.config.BlueMoonConsts.Server.SERVER_1;
 import static org.javamaster.b2c.config.BlueMoonConsts.Server.SERVER_18;
-import static org.javamaster.b2c.config.BlueMoonConsts.Server.SERVER_3;
 import org.junit.AfterClass;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author yudong
@@ -316,11 +314,26 @@ public class DubboTest {
 
     @Test
     public void test29() throws Exception {
-        MessageQueueService service = DubboUtils.getService(MessageQueueService.class,"1.3.6");
+        MessageQueueService service = DubboUtils.getService(MessageQueueService.class, "1.3.6");
         JSONObject json = new JSONObject();
         json.put("clothesCode", "20200407hd001");
         json.put("reportCode", "2004070003");
         Object resObj = service.sendMessage("clothes_conmunication_notice", json.toString(), true);
+        System.out.println(OMUtils.writeValueAsString(resObj, true));
+    }
+
+    @Test
+    public void test30() {
+        EmailService service = DubboUtils.getService(EmailService.class);
+        JSONObject json = new JSONObject();
+        json.put("content", "测试邮件发送");
+        json.put("to", "liangyudong@bluemoon.com.cn");
+        json.put("from", "gzxyzx@bluemoon.com.cn");
+        json.put("fromName", "洗衣服务系统");
+        json.put("password", "A00000001a");
+        json.put("subject", "系统异常提醒");
+        json.put("username", "gzxyzx@bluemoon.com.cn");
+        Object resObj = service.send(json);
         System.out.println(OMUtils.writeValueAsString(resObj, true));
     }
 

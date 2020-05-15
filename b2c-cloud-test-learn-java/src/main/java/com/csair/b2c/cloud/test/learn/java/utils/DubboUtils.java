@@ -23,8 +23,8 @@ public class DubboUtils {
 
     private static ApplicationConfig application = new ApplicationConfig();
 
-    private static final String ADDRESS = ZOOKEEPER_ADDRESS;
-    // private static final String ADDRESS = ZOOKEEPER_ADDRESS_1;
+    // private static final String ADDRESS = ZOOKEEPER_ADDRESS;
+    private static final String ADDRESS = ZOOKEEPER_ADDRESS_1;
     // private static final String ADDRESS = ZOOKEEPER_ADDRESS_2;
 
     private static ReferenceConfig<GenericService> referenceConfigCache;

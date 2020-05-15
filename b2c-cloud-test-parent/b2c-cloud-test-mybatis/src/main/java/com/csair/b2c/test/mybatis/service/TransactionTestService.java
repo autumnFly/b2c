@@ -8,4 +8,6 @@ package com.csair.b2c.test.mybatis.service;
 public interface TransactionTestService {
 
     int handlerRecord();
+
+    int transactionResearch();
 }

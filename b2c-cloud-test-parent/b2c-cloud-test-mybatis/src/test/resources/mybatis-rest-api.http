@@ -12,3 +12,11 @@ Token: F97EABD8CEAD29074265E22C92FCAD11
 }
 
 ###
+GET http://localhost:9700/trans/transactionResearch
+Accept: application/json
+
+###
+GET http://localhost:9700/trans/handlerRecord
+Accept: application/json
+
+###

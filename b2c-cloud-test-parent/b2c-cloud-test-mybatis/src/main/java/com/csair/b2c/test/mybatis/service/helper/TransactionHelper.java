@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author yudong
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Component
 public class TransactionHelper {
 
@@ -23,8 +24,7 @@ public class TransactionHelper {
         actor.setFirstName("liang");
         actor.setLastName("yudong");
         int res = testMapper.insertActor(actor);
-        // int a = 1;
-        // if (a == 1) {
+        // if (true) {
         //     throw new RuntimeException();
         // }
         return res;
