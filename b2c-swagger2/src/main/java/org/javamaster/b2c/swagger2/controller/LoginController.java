@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiOperation;
 import org.javamaster.b2c.swagger2.model.Result;
 import org.javamaster.b2c.swagger2.model.User;
 import org.javamaster.b2c.swagger2.model.UserReqVo;
+import org.javamaster.b2c.swagger2.service.LoginService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,13 +20,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/home")
 public class LoginController {
 
+    @Autowired
+    private LoginService loginService;
 
     @ApiOperation("登录")
     @GetMapping("/login")
     public Result<User> login(UserReqVo userReqVo) {
-        User user = new User();
-        user.setUsername(userReqVo.getUsername());
-        return new Result<>(user);
+        return new Result<>(loginService.login(userReqVo));
+    }
+
+    @ApiOperation("登录")
+    @GetMapping(value = "/login1")
+    public Result<User> login1(UserReqVo userReqVo, String appType) {
+        return new Result<>(loginService.login(userReqVo, appType));
+    }
+
+    @ApiOperation("登录")
+    @GetMapping(value = "/login2")
+    public Result<User> login2(UserReqVo userReqVo, Integer appType) {
+        return new Result<>(loginService.login(userReqVo, appType));
     }
 
 }

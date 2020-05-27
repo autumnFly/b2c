@@ -337,4 +337,10 @@ public class DubboTest {
         System.out.println(OMUtils.writeValueAsString(resObj, true));
     }
 
+    @Test
+    public void test31() {
+        DubboCommonService service = DubboUtils.getService(DubboCommonService.class,"1.0.0-yudong");
+        String jsonStrAddress = service.findWashCollectPointsArea("44", "4418", "441881", "", "英城街道23号");
+        System.out.println(jsonStrAddress);
+    }
 }
