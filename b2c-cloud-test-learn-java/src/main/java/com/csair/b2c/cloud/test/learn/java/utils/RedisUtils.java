@@ -9,6 +9,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import redis.clients.jedis.Jedis;
 
 import java.io.Serializable;
 
@@ -21,6 +22,7 @@ public class RedisUtils {
 
     public static JedisConnectionFactory factoryDev;
     public static RedisTemplate<Object, Object> redisTemplateDev;
+    public static Jedis jedis;
     public static JedisConnectionFactory factoryTest;
     public static JedisConnectionFactory factoryTestCluster;
     public static RedisTemplate<Object, Object> redisTemplateTest;
@@ -30,7 +32,7 @@ public class RedisUtils {
 
     static {
         Pair<JedisConnectionFactory, RedisTemplate<Object, Object>> pairDev = redisTemplate(BlueMoonConsts.Local.REDIS_URL,
-                BlueMoonConsts.Local.REDIS_PORT, BlueMoonConsts.Local.PASSWORD);
+                BlueMoonConsts.Local.REDIS_PORT, BlueMoonConsts.Local.REDIS_PASSWORD);
         factoryDev = pairDev.getKey();
         redisTemplateDev = pairDev.getValue();
 
@@ -47,6 +49,10 @@ public class RedisUtils {
         // BlueMoonConsts.WashingService.REDIS_PORT_2, BlueMoonConsts.WashingService.REDIS_PASSWORD_2);
         // factory = pairPrd.getKey();
         // redisTemplate = pair.getValue();
+
+        jedis = new Jedis(BlueMoonConsts.Local.REDIS_URL, BlueMoonConsts.Local.REDIS_PORT);
+        jedis.auth(BlueMoonConsts.Local.REDIS_PASSWORD);
+
     }
 
     public static void setObj(String key, Serializable obj) {

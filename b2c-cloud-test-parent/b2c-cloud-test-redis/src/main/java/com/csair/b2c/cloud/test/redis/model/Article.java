@@ -1,4 +1,4 @@
-package com.csair.b2c.cloud.test.redis;
+package com.csair.b2c.cloud.test.redis.model;
 
 import static com.csair.b2c.cloud.test.redis.NoSpringRedisTest.jedis;
 import org.junit.BeforeClass;
