@@ -293,4 +293,10 @@ public class RedisTest {
         System.out.println(jedis.get("name"));
 
     }
+
+    @Test
+    public void testDel() {
+        RedisTemplate<Object, Object> redisTemplate = RedisUtils.redisTemplateClusterTest;
+        redisTemplate.delete("kafkaSendErrorMsg");
+    }
 }
