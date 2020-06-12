@@ -1,5 +1,6 @@
 package com.csair.b2c.cloud.test.learn.java.test;
 
+import cn.com.bluemoon.crmbp.service.toSfa.SfaDubboService;
 import cn.com.bluemoon.file.dubbo.service.ImageService;
 import cn.com.bluemoon.mall.activity.dubbo.dto.UserCouponPackageManageDto;
 import cn.com.bluemoon.mall.activity.dubbo.service.UserCouponPackageManageService;
@@ -339,8 +340,25 @@ public class DubboTest {
 
     @Test
     public void test31() {
-        DubboCommonService service = DubboUtils.getService(DubboCommonService.class,"1.0.0-yudong");
+        DubboCommonService service = DubboUtils.getService(DubboCommonService.class, "1.0.0-yudong");
         String jsonStrAddress = service.findWashCollectPointsArea("44", "4418", "441881", "", "英城街道23号");
         System.out.println(jsonStrAddress);
     }
+
+    @Test
+    public void test32() throws Exception {
+        SfaDubboService service = DubboUtils.getService(SfaDubboService.class, null);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("provinceCode", "");
+        jsonObject.put("cityCode", "");
+        jsonObject.put("countyCode", "");
+        jsonObject.put("merchantCode", "3002249");
+        jsonObject.put("merchantName", "");
+        jsonObject.put("pageIndex", 0);
+        jsonObject.put("pageSize", 20);
+        jsonObject.put("method", "getUnRecord");
+        Object res = service.commonDubbo(jsonObject);
+        System.out.println(res);
+    }
+
 }

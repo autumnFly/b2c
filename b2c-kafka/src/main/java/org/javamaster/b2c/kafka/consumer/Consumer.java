@@ -14,7 +14,7 @@ public class Consumer {
 
     private int anInt = 0;
 
-    @KafkaListener(groupId = "test_group", topics = "topic_order_code", errorHandler = "kafkaErrorHandlerListener")
+    @KafkaListener(groupId = "test_group", topics = "topic_order_code", errorHandler = "kafkaErrorHandler")
     public void handler(String orderCode) {
         log.info("consumer times:{},{}", anInt++, orderCode);
         if (anInt < 16) {
