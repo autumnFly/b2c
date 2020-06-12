@@ -1,5 +1,6 @@
 package org.javamaster.b2c.kafka.consumer;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -7,12 +8,19 @@ import org.springframework.stereotype.Component;
  * @author yudong
  * @date 2019/12/13
  */
+@Slf4j
 @Component
 public class Consumer {
 
-    @KafkaListener(groupId = "test_group", topics = "topic_order_code")
+    private int anInt = 0;
+
+    @KafkaListener(groupId = "test_group", topics = "topic_order_code", errorHandler = "kafkaErrorHandlerListener")
     public void handler(String orderCode) {
-        System.out.println("cousumer:" + orderCode);
+        log.info("consumer times:{},{}", anInt++, orderCode);
+        if (anInt < 16) {
+            // 若消费失败,则消息会重新回到kafka(未指定errorHandler的情况下)
+            throw new RuntimeException("模拟异常");
+        }
     }
 
 }

@@ -17,7 +17,7 @@ public class KafkaUtils {
     public static KafkaTemplate<Object, Object> kafkaTemplateClusterTest;
 
     static {
-        kafkaTemplateClusterTest = initKafkaTemplate(BlueMoonConsts.Honor.KAFKA_SERVIERS);
+        kafkaTemplateClusterTest = initKafkaTemplate(BlueMoonConsts.Server.KAFKA_CLUSTER);
     }
 
     private static KafkaTemplate<Object, Object> initKafkaTemplate(String servers) {
