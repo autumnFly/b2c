@@ -1,6 +1,8 @@
 package org.javamaster.b2c.spring.aop.service.impl;
 
 import lombok.SneakyThrows;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.javamaster.b2c.spring.aop.SpringAopApplication;
 import org.javamaster.b2c.spring.aop.annos.AopLog;
 import org.javamaster.b2c.spring.aop.model.Demo;
@@ -210,8 +212,36 @@ public class SpringServiceImpl implements SpringService {
         List<Inventor> list = (List<Inventor>) parser.parseExpression("#inventors.?[serbian=='Serbian']").getValue(context);
         System.out.println(list);
 
-        List<Inventor> list1 = (List<Inventor>) parser.parseExpression("#inventors.![serbian=='Serbian']").getValue(context);
+        List<Inventor> list1 = (List<Inventor>) parser.parseExpression("#inventors.![serbian]").getValue(context);
+        System.out.println(list instanceof Iterable);
         System.out.println(list1);
+
+        List<Inventor> list2 = (List<Inventor>) parser.parseExpression("#inventors.![serbian=='Serbian']").getValue(context);
+        System.out.println(list2);
+
+        Map<String, Object> params = new HashMap<>(1, 1);
+        params.put("backOrderCode", "H12345764564");
+        context.setVariable("params", params);
+        Object object = parser.parseExpression("#params[backOrderCode]").getValue(context);
+        System.out.println(object);
     }
 
+    @Test
+    @SuppressWarnings("ALL")
+    public void junitTest7() {
+        ExpressionParser parser = SpringAopApplication.parser;
+
+        JSONArray backOrderInfos = new JSONArray();
+        JSONObject backOrderInfo = new JSONObject();
+        backOrderInfo.put("backOrderCode", "H200611SPVPI6");
+        backOrderInfo.put("sourceName", "liangyudong");
+        backOrderInfos.add(backOrderInfo);
+        backOrderInfo.put("backOrderCode", "H200615I3R16P");
+        backOrderInfo.put("sourceName", "jufeng");
+        backOrderInfos.add(backOrderInfo);
+        Object[] objects = new Object[]{"box", backOrderInfos};
+        System.out.println(parser.parseExpression("#{[1].![#this.opt('backOrderCode')]}",
+                ParserContext.TEMPLATE_EXPRESSION).getValue(objects));
+
+    }
 }
