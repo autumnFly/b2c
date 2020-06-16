@@ -75,16 +75,11 @@ public class Java9NewFeatureTest {
             System.out.println(br.readLine());
         }
     }
+
+    @Test
+    public void test4() {
+        Card card = new CardImpl();
+        card.displayCardDetails();
+    }
 }
 
-interface Card {
-
-    private void createCardId() {
-        System.out.println("hello world");
-    }
-
-    private static void displayCardDetails() {
-        System.out.println("hello world");
-    }
-
-}
