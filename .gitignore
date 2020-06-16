@@ -38,6 +38,7 @@ target
 node_modules
 
 .gradle
+build
 
 online-exam
 
