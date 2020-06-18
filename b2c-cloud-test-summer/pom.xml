@@ -40,9 +40,9 @@
 
     <repositories>
         <repository>
-            <id>nexus</id>
-            <name>nexus</name>
-            <url>http://192.168.236.7:8081/nexus/content/groups/public/</url>
+            <id>alibaba</id>
+            <name>alibaba</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -53,9 +53,9 @@
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>nexus</id>
-            <name>nexus</name>
-            <url>http://192.168.236.7:8081/nexus/content/groups/public/</url>
+            <id>alibaba</id>
+            <name>alibaba</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>

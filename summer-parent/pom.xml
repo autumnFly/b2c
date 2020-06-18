@@ -22,9 +22,9 @@
 
     <repositories>
         <repository>
-            <id>nexus</id>
-            <name>nexus</name>
-            <url>http://192.168.236.7:8081/nexus/content/groups/public/</url>
+            <id>alibaba</id>
+            <name>alibaba</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -36,9 +36,9 @@
 
     <pluginRepositories>
         <pluginRepository>
-            <id>nexus</id>
-            <name>nexus</name>
-            <url>http://192.168.236.7:8081/nexus/content/groups/public/</url>
+            <id>alibaba</id>
+            <name>alibaba</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -50,9 +50,9 @@
 
     <distributionManagement>
         <repository>
-            <id>releases</id>
-            <name>Nexus Releases</name>
-            <url>http://192.168.236.7:8081/nexus/content/repositories/releases/</url>
+            <id>alibaba</id>
+            <name>alibaba</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
         </repository>
         <snapshotRepository>
             <id>snapshots</id>
