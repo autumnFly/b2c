@@ -223,7 +223,12 @@ public class SpringServiceImpl implements SpringService {
         params.put("backOrderCode", "H12345764564");
         context.setVariable("params", params);
         Object object = parser.parseExpression("#params[backOrderCode]").getValue(context);
-        System.out.println(object);
+        System.out.println("1." + object);
+
+        StandardEvaluationContext context1 = new StandardEvaluationContext(params);
+        Object object1 = parser.parseExpression("#params[backOrderCode]").getValue(context);
+        System.out.println("2." + object1);
+
     }
 
     @Test
@@ -242,6 +247,11 @@ public class SpringServiceImpl implements SpringService {
         Object[] objects = new Object[]{"box", backOrderInfos};
         System.out.println(parser.parseExpression("#{[1].![#this.opt('backOrderCode')]}",
                 ParserContext.TEMPLATE_EXPRESSION).getValue(objects));
+
+
+        StandardEvaluationContext context1 = new StandardEvaluationContext(objects);
+        Object object1 = parser.parseExpression("[1].![#this.opt('backOrderCode')]").getValue(context1);
+        System.out.println(object1);
 
     }
 }

@@ -2,10 +2,15 @@ package org.javamaster.get.ip;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -17,34 +22,62 @@ public class Application {
 
     static Logger logger = Logger.getLogger(Application.class.getName());
 
+    static ThreadLocal<String> threadLocal = ThreadLocal.withInitial(() -> {
+        try {
+            return new String(Files.readAllBytes(Paths.get("D:\\User\\天天共享文件夹\\hosts.txt")));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    });
+
     public static void main(String[] args) throws Exception {
         while (true) {
             StringBuilder content = new StringBuilder();
             content.append("127.0.0.1     localhost\n");
             content.append("::1           ip6-localhost\n");
-            String ip = "";
+            Map<String, String> ipMap = new HashMap<>(2, 1);
             Enumeration<NetworkInterface> allNetInterfaces = NetworkInterface.getNetworkInterfaces();
             while (allNetInterfaces.hasMoreElements()) {
                 NetworkInterface netInterface = allNetInterfaces.nextElement();
-                if (!netInterface.isLoopback() && !netInterface.isVirtual() && netInterface.isUp()) {
-                    Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
-                    while (addresses.hasMoreElements()) {
-                        InetAddress inetAddress = addresses.nextElement();
-                        if (inetAddress instanceof Inet4Address) {
-                            if (inetAddress.getHostAddress().startsWith("10.1")) {
-                                ip = inetAddress.getHostAddress();
-                            }
-                        }
+                if (netInterface.isLoopback() || netInterface.isVirtual()) {
+                    continue;
+                }
+                if (!netInterface.isUp()) {
+                    continue;
+                }
+                Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress inetAddress = addresses.nextElement();
+                    if (!(inetAddress instanceof Inet4Address)) {
+                        continue;
                     }
+                    if (!inetAddress.getHostAddress().startsWith("10.1")) {
+                        continue;
+                    }
+                    ipMap.put(netInterface.getName(), inetAddress.getHostAddress());
                 }
             }
-            content.append(ip).append("      agent.javamaster.org\n");
+            String ip = "";
+            for (Map.Entry<String, String> stringEntry : ipMap.entrySet()) {
+                if (stringEntry.getKey().contains("eth")) {
+                    ip = stringEntry.getValue();
+                    break;
+                }
+                ip = stringEntry.getValue();
+            }
 
+            content.append(ip).append("      agent.javamaster.org\n");
             FileWriter fileWriter = null;
             try {
                 File file = new File("D:\\User\\天天共享文件夹\\hosts.txt");
-                fileWriter = new FileWriter(file);
-                fileWriter.write(content.toString());
+
+                String oldHostsContent = threadLocal.get();
+                if (!oldHostsContent.equals(content.toString())) {
+                    fileWriter = new FileWriter(file);
+                    fileWriter.write(content.toString());
+                    threadLocal.set(content.toString());
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
