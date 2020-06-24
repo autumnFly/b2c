@@ -9,6 +9,9 @@ import com.csair.b2c.cloud.test.user.vo.UpdatePasswordReqVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import javafx.util.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedNotification;
@@ -38,8 +41,8 @@ import java.util.UUID;
 @Service
 @ManagedResource(objectName = "user:name=UserServiceImpl")
 @ManagedNotification(notificationTypes = "user.login", name = "tryLogin")
-public class UserServiceImpl implements UserService, NotificationPublisherAware {
-
+public class UserServiceImpl implements UserService, NotificationPublisherAware, DisposableBean {
+    static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     @Autowired
     private UsersMapper usersMapper;
 
@@ -138,6 +141,17 @@ public class UserServiceImpl implements UserService, NotificationPublisherAware 
         dbUsers.setPassword(passwordEncoder.encode(reqVo.getNewPassword()));
         int affectRows = usersMapper.updateByPrimaryKey(dbUsers);
         return affectRows;
+    }
+
+    @Override
+    public void destroy() {
+        logger.info("clear resource");
+        Long sum = 0L;
+        int max = Integer.MAX_VALUE / 3;
+        for (int i = 0; i < max; i++) {
+            sum += i;
+        }
+        logger.info("clear resource1:" + sum);
     }
 
 }
