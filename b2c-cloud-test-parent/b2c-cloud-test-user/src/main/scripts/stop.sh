@@ -12,7 +12,6 @@ else
 	while [[ "$TRY_TIMES" -lt 8 ]];
     do
 		sleep 1
-		TRY_TIMES=$[${TRY_TIMES}+1]
 		# 重新寻找微服务的进程id
 		PID=$(ps -ef | grep ${APPLICATION_NAME} | grep -v grep | awk '{ print $2 }')
 		echo "repeat find pid is:${PID}"
@@ -20,6 +19,7 @@ else
 		    # 虚拟机进程已成功自行退出
 		    break;
 		fi
+		TRY_TIMES=$[${TRY_TIMES}+1]
 	done
 	if [[ ${TRY_TIMES} == 8 ]]; then
 	    # 检测了8次(即等待了8s),虚拟机进程均未能自行退出,则强制结束进程

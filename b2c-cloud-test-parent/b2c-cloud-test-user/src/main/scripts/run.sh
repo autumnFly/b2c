@@ -1,8 +1,8 @@
 #!/bin/bash
-# 找到jar包完整名称
-export APPLICATION_NAME=`ls | grep .jar`
+# 找到jar包名称
+export APPLICATION_NAME=`ls | grep .jar | sed s/".jar"/""/`
 
-unzip -j ${APPLICATION_NAME} BOOT-INF/classes/application.yml
+unzip -j ${APPLICATION_NAME}.jar BOOT-INF/classes/application.yml
 # 读取application.yml文件找到应用启动的端口号
 APPLICATION_PORT=`cat application.yml | grep -w '^  port'| cut -d':' -f2 | sed -e 's/\(^[ \t] *\)//' | sed 's/\r//'`
 rm -rf application.yml

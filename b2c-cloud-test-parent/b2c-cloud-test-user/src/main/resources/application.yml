@@ -5,7 +5,7 @@ server:
   port: 8999
 eureka:
   instance:
-    hostname: eureka.dev.csair.com
+    hostname: 127.0.0.1
     port: 8761
     nonSecurePort: ${server.port:8600}
     preferIpAddress: true

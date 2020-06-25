@@ -52,9 +52,6 @@ public class Application {
                     if (!(inetAddress instanceof Inet4Address)) {
                         continue;
                     }
-                    if (!inetAddress.getHostAddress().startsWith("10.1")) {
-                        continue;
-                    }
                     ipMap.put(netInterface.getName(), inetAddress.getHostAddress());
                 }
             }

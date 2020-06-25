@@ -1,7 +1,7 @@
 #!/bin/bash
-echo "Application ${APPLICATION_NAME} starting..."
+echo "Application ${APPLICATION_NAME} starting, please wait..."
 JAVA_OPTS="-Xms256m -Xmx512m"
-nohup /usr/java/jdk1.8.0_92/bin/java -jar ${APPLICATION_NAME} ${JAVA_OPTS} >boot-log.log 2>&1  &
+nohup /usr/java/jdk1.8.0_92/bin/java -jar ${APPLICATION_NAME}.jar ${JAVA_OPTS} 1>/dev/null 2>&1  &
 
 # 检测应用是否启动成功
 detectApplication(){
@@ -25,8 +25,10 @@ detectApplication(){
     done
     if [[ ${CURL_CODE} == 0 ]]; then
         echo "Application ${APPLICATION_NAME} start success."
+        tail -n 300 logs/${APPLICATION_NAME}.log
     else
         echo "Application ${APPLICATION_NAME} start failed."
+        tail -n 1500 logs/${APPLICATION_NAME}.log
     fi
 }
 detectApplication
