@@ -5,6 +5,15 @@ nohup /usr/java/jdk1.8.0_92/bin/java -jar ${APPLICATION_NAME}.jar ${JAVA_OPTS} 1
 
 # 检测应用是否启动成功
 detectApplication(){
+    unzip -j ${APPLICATION_NAME}.jar BOOT-INF/classes/application.yml
+    # 读取application.yml文件找到应用启动的端口号
+    APPLICATION_PORT=`cat application.yml | grep -w '^  port'| cut -d':' -f2 | sed -e 's/\(^[ \t] *\)//' | sed 's/\r//'`
+    rm -rf application.yml
+    # 找到当前机器的ip地址
+    IP_ADDRESS=`ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1 -d '/'`
+    # 得到微服务的检测地址
+    DETECT_URL="http://${IP_ADDRESS:-localhost}:${APPLICATION_PORT}/info"
+    echo "DETECT_URL is ${DETECT_URL}"
     sleep 15
     curl --connect-timeout 3 -m 3 -i ${DETECT_URL}
     CURL_CODE=$?

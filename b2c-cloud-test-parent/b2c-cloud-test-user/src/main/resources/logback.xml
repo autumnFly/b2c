@@ -11,7 +11,11 @@
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>logs/${project.artifactId}.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>logs/${project.artifactId}.%d{yyyy-MM-dd-HH}.log.zip</FileNamePattern>
+            <FileNamePattern>logs/${project.artifactId}.%d{yyyy-MM-dd-HH}.%i.log</FileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>128MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>%date [%thread] %-5level %logger{80} - %msg%n</pattern>
