@@ -1,10 +1,12 @@
 package com.csair.b2c.cloud.test.learn.java.utils;
 
 import com.google.common.collect.Maps;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.javamaster.b2c.config.BlueMoonConsts;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.ProducerListener;
 
 import java.util.Map;
 
@@ -36,6 +38,23 @@ public class KafkaUtils {
         configs.put("retries", "3");
         configs.put("acks", "1");
         ProducerFactory<Object, Object> kafkaProducerFactory = new DefaultKafkaProducerFactory<>(configs);
-        return new KafkaTemplate<>(kafkaProducerFactory);
+        KafkaTemplate<Object, Object> kafkaTemplate = new KafkaTemplate<>(kafkaProducerFactory);
+        kafkaTemplate.setProducerListener(new ProducerListener<Object, Object>() {
+            @Override
+            public void onSuccess(String topic, Integer partition, Object key, Object value, RecordMetadata recordMetadata) {
+                System.out.println("success:" + value);
+            }
+
+            @Override
+            public void onError(String topic, Integer partition, Object key, Object value, Exception exception) {
+                System.out.println("error:" + value);
+            }
+
+            @Override
+            public boolean isInterestedInSuccess() {
+                return true;
+            }
+        });
+        return kafkaTemplate;
     }
 }

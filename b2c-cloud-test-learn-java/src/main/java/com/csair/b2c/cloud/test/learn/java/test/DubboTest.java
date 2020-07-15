@@ -1,6 +1,8 @@
 package com.csair.b2c.cloud.test.learn.java.test;
 
+import cn.com.bluemoon.common.util.MD5Implementor;
 import cn.com.bluemoon.crmbp.service.toSfa.SfaDubboService;
+import cn.com.bluemoon.dubbo.kdn.SubscribeService;
 import cn.com.bluemoon.file.dubbo.service.ImageService;
 import cn.com.bluemoon.mall.activity.dubbo.dto.UserCouponPackageManageDto;
 import cn.com.bluemoon.mall.activity.dubbo.service.UserCouponPackageManageService;
@@ -14,11 +16,13 @@ import cn.com.bluemoon.service.common.service.RegionService;
 import cn.com.bluemoon.service.customizingorder.api.CustomizingOrderDubboService;
 import cn.com.bluemoon.service.emp.api.MapService;
 import cn.com.bluemoon.service.mallcrm.service.message.MesssagePushService;
+import cn.com.bluemoon.service.portal.service.PortalAppService;
 import cn.com.bluemoon.service.station.api.DubboCommonService;
 import cn.com.bluemoon.service.user.service.SsoService;
 import cn.com.bluemoon.training.dubbo.api.CourseBaseApiService;
 import cn.com.bluemoon.wash.dubbo.service.WashLevelTypeService;
 import cn.com.bluemoon.wash.dubbo.service.WashPriceManageService;
+import com.alibaba.fastjson.JSON;
 import com.bluemoon.kafka.dubbo.api.MessageQueueService;
 import com.bluemoon.pf.map.dto.AddressDto;
 import com.bluemoon.pf.map.enums.ApiTypeEnums;
@@ -31,6 +35,7 @@ import com.bluemoon.proxy.service.sms.SmsService;
 import com.csair.b2c.cloud.test.dubbo.provider.api.service.UserDubboService;
 import com.csair.b2c.cloud.test.learn.java.utils.DubboUtils;
 import com.csair.b2c.cloud.test.learn.java.utils.OMUtils;
+import com.fasterxml.jackson.databind.JsonNode;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.time.DateUtils;
 import static org.javamaster.b2c.config.BlueMoonConsts.Server.SERVER_1;
@@ -41,6 +46,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 
 /**
  * @author yudong
@@ -84,6 +90,12 @@ public class DubboTest {
         object.put("mobile", "18826483964");
         Object resObj = service.getUserInfoByMobile(object);
         System.out.println(OMUtils.writeValueAsString(resObj, true));
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("account", "80546269");
+        jsonObject.put("password", MD5Implementor.MD5Encode("qq123123"));
+        String response = service.ssoLogin(jsonObject);
+        System.out.println(response);
     }
 
     @Test
@@ -361,4 +373,22 @@ public class DubboTest {
         System.out.println(res);
     }
 
+    @Test
+    public void test33() {
+        SubscribeService service = DubboUtils.getService(SubscribeService.class, "1.0.0");
+        Object res = service.subscribeTraces("246453112546", "SF", "washing");
+        System.out.println(JSON.toJSONString(res));
+    }
+
+    @Test
+    public void test34() throws Exception {
+        PortalAppService service = DubboUtils.getService(PortalAppService.class, null);
+        Object resObj = service.getRoleListByUser("80546269");
+        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        JsonNode roleListResJson = OMUtils.objectMapper.readValue((String)resObj, JsonNode.class);
+        Iterator<JsonNode> iterable = roleListResJson.get("info").iterator();
+        iterable.forEachRemaining(jsonNode -> {
+            System.out.println(jsonNode.asText());
+        });
+    }
 }
