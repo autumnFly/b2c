@@ -1,16 +1,23 @@
 package org.javamaster.b2c.spring.data.jpa;
 
+import org.javamaster.b2c.spring.data.jpa.entity.Actor;
 import org.javamaster.b2c.spring.data.jpa.repository.ActorRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.orm.hibernate5.HibernateCallback;
+import org.springframework.orm.hibernate5.HibernateTemplate;
+
+import java.util.List;
 
 @SpringBootTest
 class SpringDataJpaApplicationTest {
     @Autowired
     private ActorRepository actorRepository;
+    @Autowired
+    private HibernateTemplate hibernateTemplate;
 
     @Test
     void contextLoads() {
@@ -26,4 +33,13 @@ class SpringDataJpaApplicationTest {
         System.out.println(actorRepository.setFixedFirstnameFor("nick", "WAHLBERG"));
     }
 
+    @Test
+    void test() {
+        System.out.println(hibernateTemplate.get(Actor.class, 1));
+        List<Actor> actors = hibernateTemplate.execute((HibernateCallback<List<Actor>>) session ->
+                session.createQuery("select a from Actor a where a.firstName like :firstName")
+                        .setParameter("firstName", "BE%")
+                        .getResultList());
+        System.out.println(actors);
+    }
 }
