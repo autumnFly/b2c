@@ -19,12 +19,12 @@ public class KafkaUtils {
     public static KafkaTemplate<Object, Object> kafkaTemplateClusterTest;
 
     static {
-        kafkaTemplateClusterTest = initKafkaTemplate(BlueMoonConsts.Server.KAFKA_CLUSTER);
+        kafkaTemplateClusterTest = initKafkaTemplate();
     }
 
-    private static KafkaTemplate<Object, Object> initKafkaTemplate(String servers) {
+    private static KafkaTemplate<Object, Object> initKafkaTemplate() {
         Map<String, Object> configs = Maps.newHashMap();
-        configs.put("bootstrap.servers", servers);
+        configs.put("bootstrap.servers", BlueMoonConsts.Server.KAFKA_CLUSTER);
         configs.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         configs.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         configs.put("group.id", "wx_card_group");
