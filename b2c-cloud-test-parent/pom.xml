@@ -34,7 +34,6 @@
         <module>b2c-cloud-test-feign</module>
         <module>b2c-cloud-test-hystrix</module>
         <module>b2c-cloud-test-security</module>
-        <module>b2c-cloud-test-actuator</module>
         <module>b2c-cloud-test-learn-maven</module>
         <module>b2c-cloud-test-redis</module>
         <module>b2c-cloud-test-mongodb</module>
@@ -50,7 +49,6 @@
         <module>b2c-cloud-test-dubbo-consumer</module>
         <module>b2c-cloud-test-mybatistk</module>
         <module>b2c-cloud-test-user</module>
-        <module>b2c-cloud-test-admin</module>
         <module>b2c-cloud-test-batch</module>
         <module>b2c-cloud-test-kotlin</module>
         <module>b2c-cloud-test-scheduled</module>
