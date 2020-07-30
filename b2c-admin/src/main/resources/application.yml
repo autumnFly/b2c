@@ -2,6 +2,9 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
+spring:
+  application:
+    name: b2c-admin
 server:
   port: 8259
 management:
@@ -9,6 +12,3 @@ management:
     web:
       exposure:
         include: '*'
-spring:
-  application:
-    name: b2c-admin

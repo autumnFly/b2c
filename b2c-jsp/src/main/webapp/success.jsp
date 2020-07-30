@@ -9,6 +9,7 @@
 <html>
 <head>
     <title>Title</title>
+    <script type="text/javascript" src="js/home.js"></script>
 </head>
 <body>
 <h1>保存成功!!!</h1>
