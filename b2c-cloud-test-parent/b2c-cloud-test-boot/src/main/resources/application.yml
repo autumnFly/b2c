@@ -16,9 +16,13 @@ eureka:
 server:
   port: 8100
 management:
-  context-path: /actua
-  security:
-    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  server:
+    servlet:
+      context-path: /actua
 info:
   service-name: ${spring.application.name}
   packagetime: ${packagetime}
