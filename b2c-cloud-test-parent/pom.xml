@@ -38,7 +38,6 @@
         <module>b2c-cloud-test-redis</module>
         <module>b2c-cloud-test-mongodb</module>
         <module>b2c-cloud-test-session</module>
-        <module>b2c-cloud-test-cache</module>
         <module>b2c-cloud-test-rpc</module>
         <module>b2c-cloud-test-mail</module>
         <module>b2c-cloud-test-zuul</module>

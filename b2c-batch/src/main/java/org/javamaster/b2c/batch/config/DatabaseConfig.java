@@ -1,6 +1,6 @@
-package com.csair.b2c.cloud.test.batch.config;
+package org.javamaster.b2c.batch.config;
 
-import com.alibaba.druid.pool.DruidDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.javamaster.b2c.config.BlueMoonConsts;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -20,30 +20,18 @@ import javax.sql.DataSource;
 @Configuration
 public class DatabaseConfig {
 
-    //    @Value("${db.mysql.driverClassName}")
-    private String driverClassName = "com.mysql.jdbc.Driver";
-    //    @Value("${db.mysql.url}")
-    private String url = BlueMoonConsts.Local.URL_SAKILA;
-    //    @Value("${db.mysql.username}")
-    private String username = BlueMoonConsts.Local.USERNAME;
-    //    @Value("${db.mysql.password}")
-    private String password = BlueMoonConsts.Local.PASSWORD;
-
     @Bean
     @Primary
     public DataSource dataSource() {
-        DruidDataSource dataSource = new DruidDataSource();
+        HikariDataSource dataSource = new HikariDataSource();
+        String driverClassName = "com.mysql.cj.jdbc.Driver";
         dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl(url);
+        String url = BlueMoonConsts.Local.URL_SAKILA;
+        dataSource.setJdbcUrl(url);
+        String username = BlueMoonConsts.Local.USERNAME;
         dataSource.setUsername(username);
+        String password = BlueMoonConsts.Local.PASSWORD;
         dataSource.setPassword(password);
-        dataSource.setInitialSize(2);
-        dataSource.setMaxActive(20);
-        dataSource.setMaxWait(10000);
-        dataSource.setDefaultAutoCommit(true);
-        dataSource.setRemoveAbandoned(true);
-        dataSource.setTestOnBorrow(true);
-        dataSource.setValidationQuery("select now()");
         return dataSource;
     }
 
@@ -51,11 +39,10 @@ public class DatabaseConfig {
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
-        bean.setTypeAliasesPackage("com.csair.b2c.**.model");
-        bean.setTypeHandlersPackage("com.csair.b2c.cloud.test.user.handler");
-
-        final String MAPPER_LOCATION = "classpath*:mapper/**/*.xml";
-        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(MAPPER_LOCATION));
+        bean.setTypeAliasesPackage("org.javamaster.b2c.**.model");
+        bean.setTypeHandlersPackage("org.javamaster.b2c.handler");
+        String mapperLocation = "classpath*:mapper/**/*.xml";
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(mapperLocation));
         return bean.getObject();
     }
 

@@ -1,6 +1,6 @@
-package com.csair.b2c.cloud.test.batch.listener;
+package org.javamaster.b2c.batch.listener;
 
-import com.csair.b2c.cloud.test.batch.model.Person;
+import org.javamaster.b2c.batch.model.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
