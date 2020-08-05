@@ -1,6 +1,7 @@
 package org.javamaster.b2c.selenium;
 
 import org.javamaster.b2c.selenium.helper.BluemoonSeleniumHelper;
+import org.javamaster.b2c.selenium.utils.PropertiesUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class BrowserTests {
 
     @Before
     public void loginToSystem() throws Exception {
-        helper.loginToSystem("80546269", "qq123123");
+        helper.loginToSystem(PropertiesUtils.getProp("angel.code"), PropertiesUtils.getProp("angel.password"));
     }
 
     @After
@@ -30,7 +31,7 @@ public class BrowserTests {
 
     @Test
     public void bagCollect() throws Exception {
-        logger.info("{}", helper.bagCollect("80546269"));
+        logger.info("{}", helper.bagCollect(PropertiesUtils.getProp("angel.code")));
     }
 
     @Test
@@ -52,10 +53,10 @@ public class BrowserTests {
 
     @Test
     public void completeProcess() throws Exception {
-        logger.info("{}", helper.bagCollect("80546269"));
+        logger.info("{}", helper.bagCollect(PropertiesUtils.getProp("angel.code")));
 
         helper.switchToDefaultFrame();
-        List<String> clothesCodes = helper.bagCollectManage(2);
+        List<String> clothesCodes = helper.bagCollectManage(1);
         logger.info("{}", clothesCodes);
 
         helper.switchToDefaultFrame();

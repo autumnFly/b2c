@@ -2,6 +2,7 @@ package org.javamaster.b2c.selenium.helper;
 
 import static java.util.stream.Collectors.toList;
 import net.bytebuddy.utility.RandomString;
+import org.javamaster.b2c.selenium.utils.PropertiesUtils;
 import org.javamaster.b2c.selenium.utils.StringUtils;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriverException;
@@ -26,7 +27,7 @@ public class BluemoonSeleniumHelper {
     private ChromeDriver browser;
 
     public BluemoonSeleniumHelper() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\yu\\AppData\\Local\\Google\\Chrome\\Application\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", PropertiesUtils.getProp("driver.path"));
         browser = new ChromeDriver();
         browser.manage().window().maximize();
     }
@@ -36,8 +37,7 @@ public class BluemoonSeleniumHelper {
     }
 
     public void loginToSystem(String username, String password) throws Exception {
-        String baseUrl = "http://angelapi.bluemoon.com.cn/portal-admin/login.html";
-        browser.get(baseUrl);
+        browser.get(PropertiesUtils.getProp("base.url"));
         findByEleId("username").sendKeys(username);
         findByEleId("password").sendKeys(password);
         findByEleId("rand").sendKeys("8888");
@@ -133,7 +133,7 @@ public class BluemoonSeleniumHelper {
             // 选择样式
             executeAndTryToSetNuiValue("style", "stripe");
             executeAndTryToSetNuiValue("remark", "这算是衣物备注额");
-            findByEleId("makeup").sendKeys("C:\\Users\\yu\\Pictures\\9bda5f3a079a0561bc256447991afeed.jpg");
+            findByEleId("makeup").sendKeys(PropertiesUtils.getPropListRandomOne("pic.paths"));
             // 上传
             browser.executeScript("uploadFile('makeup')");
             // 点击保存
