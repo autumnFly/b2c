@@ -1,6 +1,5 @@
 package org.javamaster.b2c.selenium.helper;
 
-import static java.util.stream.Collectors.toList;
 import net.bytebuddy.utility.RandomString;
 import org.javamaster.b2c.selenium.utils.PropertiesUtils;
 import org.javamaster.b2c.selenium.utils.StringUtils;
@@ -17,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * @author yudong
  * @date 2020/8/3
@@ -24,20 +25,20 @@ import java.util.concurrent.TimeUnit;
 public class BluemoonSeleniumHelper {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
-    private ChromeDriver browser;
+    private ChromeDriver driver;
 
     public BluemoonSeleniumHelper() {
         System.setProperty("webdriver.chrome.driver", PropertiesUtils.getProp("driver.path"));
-        browser = new ChromeDriver();
-        browser.manage().window().maximize();
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
     }
 
     public void exitBrowser() {
-        browser.quit();
+        driver.quit();
     }
 
     public void loginToSystem(String username, String password) throws Exception {
-        browser.get(PropertiesUtils.getProp("base.url"));
+        driver.get(PropertiesUtils.getProp("base.url"));
         findByEleId("username").sendKeys(username);
         findByEleId("password").sendKeys(password);
         findByEleId("rand").sendKeys("8888");
@@ -88,7 +89,7 @@ public class BluemoonSeleniumHelper {
             // 点击接收衣物
             tryToClick(findByEleId("receiveClothes"));
             clothesCodes.addAll(bagCollectManage());
-            browser.switchTo().defaultContent();
+            switchToDefaultFrame();
             // 切换回收衣袋收衣管理iframe
             switchToTargetFrameById("iframe_hotel_clothes_receive_manager");
             waitMiniMaskDisappear();
@@ -101,7 +102,7 @@ public class BluemoonSeleniumHelper {
         // 切换到接收衣物iframe
         switchToTargetFrameBySrc("/wash/hotel/pack/clothesReceive.jsp");
         // 选择出库方式
-        executeAndTryToSetNuiValue("outWays", "person_out_way");
+        executeAndTryToSetNuiValue("outWays", "personal_out_way");
         List<Map<String, Object>> mapList = executeAndTryToGetList("return grid.data");
         for (int i = 0; i < mapList.size(); i++) {
             // 选择待登记衣物
@@ -113,13 +114,16 @@ public class BluemoonSeleniumHelper {
             switchToTargetFrameBySrc("/wash/hotel/pack/clothesInfoAdd.jsp");
             String clothesCode = executeAndTryToGetNuiValue("clothesCode");
             if (StringUtils.isEmpty(clothesCode)) {
-                // 没有衣物编码
+                // 填充衣物编码
                 clothesCode = RandomString.make(8) + "yu";
                 executeAndTryToSetNuiValue("clothesCode", clothesCode);
             }
             clothesCodes.add(clothesCode);
-            // 选择折叠的包装方式
-            executeAndTryToSetNuiValue("packageType", "fold");
+            String packageType = executeAndTryToGetNuiValue("packageType");
+            if (StringUtils.isEmpty(packageType)) {
+                // 选择折叠的包装方式
+                executeAndTryToSetNuiValue("packageType", "fold");
+            }
             // 选择有瑕疵
             executeAndTryToSetNuiValue("hasFlaw", "1");
             // 选择瑕疵
@@ -128,14 +132,17 @@ public class BluemoonSeleniumHelper {
             executeAndTryToSetNuiValue("hasStain", "1");
             // 选择污渍
             chooseCheckBox("stain", Arrays.asList("160701144522651", "160701144740804", "160704105823293"));
-            executeAndTryToSetNuiValue("removeableAttachment", "这是可拆卸附件啊");
-            executeAndTryToSetNuiValue("mainColor", "这是主体色啊");
+            String removeableAttachment = executeAndTryToGetNuiValue("removeableAttachment");
+            executeAndTryToSetNuiValue("removeableAttachment", "这是可拆卸附件啊" + removeableAttachment);
+            String mainColor = executeAndTryToGetNuiValue("mainColor");
+            executeAndTryToSetNuiValue("mainColor", "这是主体色啊" + mainColor);
             // 选择样式
             executeAndTryToSetNuiValue("style", "stripe");
-            executeAndTryToSetNuiValue("remark", "这算是衣物备注额");
+            String remark = executeAndTryToGetNuiValue("remark");
+            executeAndTryToSetNuiValue("remark", "这算是衣物备注额" + remark);
             findByEleId("makeup").sendKeys(PropertiesUtils.getPropListRandomOne("pic.paths"));
             // 上传
-            browser.executeScript("uploadFile('makeup')");
+            driver.executeScript("uploadFile('makeup')");
             // 点击保存
             tryToClick(findByEleId("save_btn"));
             switchToParentFrame();
@@ -152,7 +159,7 @@ public class BluemoonSeleniumHelper {
         // 点击弹框(div)确定按钮
         tryToClick(findsByCssSelect("div.mini-panel.mini-window.mini-window-drag span.mini-button-text").get(0));
         // 点击取消按钮关闭接收衣物页面
-        browser.executeScript("onCancel()");
+        driver.executeScript("onCancel()");
         return clothesCodes;
     }
 
@@ -218,8 +225,8 @@ public class BluemoonSeleniumHelper {
     public String executeAndTryToGetNuiValue(String nuiName) throws Exception {
         while (true) {
             try {
-                return browser.executeScript(String.format("return nui.get('%s').getValue()", nuiName)).toString();
-            } catch (WebDriverException e) {
+                return driver.executeScript(String.format("return nui.get('%s').getValue()", nuiName)).toString();
+            } catch (Exception e) {
                 logger.error("tryToGetNuiValue:{},{}", e.getClass().getSimpleName(), e.getMessage().substring(0, 100));
             }
             sleep();
@@ -229,7 +236,7 @@ public class BluemoonSeleniumHelper {
     public void executeAndTryToSetNuiValue(String nuiName, String value) throws Exception {
         while (true) {
             try {
-                browser.executeScript(String.format("nui.get('%s').setValue('%s')", nuiName, value));
+                driver.executeScript(String.format("nui.get('%s').setValue('%s')", nuiName, value));
                 break;
             } catch (Exception e) {
                 logger.error("tryToSetNuiValue:{},{}", e.getClass().getSimpleName(), e.getMessage().substring(0, 100));
@@ -241,7 +248,7 @@ public class BluemoonSeleniumHelper {
     public void executeAndTryToSelectNuiGridRow(String gridName, int rowIndex) throws Exception {
         Object object = executeAndTryToGetData(String.format("return %s.getRow(%s)", gridName, rowIndex));
         logger.info("executeAndTryToSelectNuiGridRow:" + object.getClass().getSimpleName());
-        browser.executeScript(String.format("%s.select(%s.getRow(%s))", gridName, gridName, rowIndex));
+        driver.executeScript(String.format("%s.select(%s.getRow(%s))", gridName, gridName, rowIndex));
     }
 
     @SuppressWarnings("ALL")
@@ -249,7 +256,7 @@ public class BluemoonSeleniumHelper {
         List<Map<String, Object>> mapList;
         while (true) {
             try {
-                mapList = (List<Map<String, Object>>) browser.executeScript(script);
+                mapList = (List<Map<String, Object>>) driver.executeScript(script);
                 if (!mapList.isEmpty()) {
                     break;
                 }
@@ -266,7 +273,7 @@ public class BluemoonSeleniumHelper {
         Object object;
         while (true) {
             try {
-                object = browser.executeScript(script);
+                object = driver.executeScript(script);
                 if (object != null) {
                     break;
                 }
@@ -281,7 +288,7 @@ public class BluemoonSeleniumHelper {
     public void executeAndDoNothing(String script) throws Exception {
         while (true) {
             try {
-                browser.executeScript(script);
+                driver.executeScript(script);
                 break;
             } catch (Exception e) {
                 logger.error("executeAndDoNothing:{},{}", e.getClass().getSimpleName(), e.getMessage().substring(0, 100));
@@ -310,14 +317,15 @@ public class BluemoonSeleniumHelper {
 
     public void chooseCheckBox(String nuiName, List<String> itemKeys) {
         for (String itemKey : itemKeys) {
-            browser.executeScript(String.format("nui.get('%s').setSelected('%s')", nuiName, itemKey));
+            driver.executeScript(String.format("nui.get('%s').setSelected('%s')", nuiName, itemKey));
         }
     }
 
     public void switchToChildFrame() throws Exception {
         while (true) {
             try {
-                browser.switchTo().frame(0);
+                driver.switchTo().frame(0);
+                sleep();
                 break;
             } catch (Exception e) {
                 logger.error("switchToChildFrame:{},{}", e.getClass().getSimpleName(), e.getMessage().substring(0, 100));
@@ -329,7 +337,7 @@ public class BluemoonSeleniumHelper {
     public void switchToDefaultFrame() throws Exception {
         while (true) {
             try {
-                browser.switchTo().defaultContent();
+                driver.switchTo().defaultContent();
                 sleep();
                 break;
             } catch (Exception e) {
@@ -342,7 +350,8 @@ public class BluemoonSeleniumHelper {
     public void switchToTargetFrameById(String frameId) throws Exception {
         while (true) {
             try {
-                browser.switchTo().frame(frameId);
+                driver.switchTo().frame(frameId);
+                sleep();
                 break;
             } catch (Exception e) {
                 logger.error("switchToTargetFrameById:{},{}", e.getClass().getSimpleName(), e.getMessage().substring(0, 100));
@@ -353,7 +362,7 @@ public class BluemoonSeleniumHelper {
 
 
     public void switchToTargetFrameBySrc(String src) throws Exception {
-        List<WebElement> list = browser.findElementsByTagName("iframe");
+        List<WebElement> list = driver.findElementsByTagName("iframe");
         for (WebElement webElement : list) {
             String eleSrc = webElement.getAttribute("src");
             if (!eleSrc.contains(src)) {
@@ -367,7 +376,7 @@ public class BluemoonSeleniumHelper {
     private void switchToParentFrame() throws Exception {
         while (true) {
             try {
-                browser.switchTo().parentFrame();
+                driver.switchTo().parentFrame();
                 sleep();
                 break;
             } catch (Exception e) {
@@ -380,7 +389,7 @@ public class BluemoonSeleniumHelper {
     private void switchToTargetFrame(WebElement webElement) throws Exception {
         while (true) {
             try {
-                browser.switchTo().frame(webElement);
+                driver.switchTo().frame(webElement);
                 sleep();
                 break;
             } catch (Exception e) {
@@ -393,7 +402,7 @@ public class BluemoonSeleniumHelper {
     public WebElement findByEleId(String id) throws Exception {
         while (true) {
             try {
-                return browser.findElementById(id);
+                return driver.findElementById(id);
             } catch (Exception e) {
                 logger.error("findByEleId:{},{}", e.getClass().getSimpleName(), e.getMessage().substring(0, 100));
                 sleep();
@@ -403,7 +412,7 @@ public class BluemoonSeleniumHelper {
 
     public boolean existsElementById(String id) {
         try {
-            browser.findElementById(id);
+            driver.findElementById(id);
             return true;
         } catch (Exception e) {
             logger.error("existsElementById:" + id);
@@ -412,14 +421,14 @@ public class BluemoonSeleniumHelper {
     }
 
     public boolean existsElementByClassName(String className) {
-        List<WebElement> list = browser.findElementsByClassName(className);
+        List<WebElement> list = driver.findElementsByClassName(className);
         return !list.isEmpty();
     }
 
     public List<WebElement> findsByCssSelect(String cssSelect) throws Exception {
         List<WebElement> list;
         while (true) {
-            list = browser.findElementsByCssSelector(cssSelect);
+            list = driver.findElementsByCssSelector(cssSelect);
             if (!list.isEmpty()) {
                 break;
             }
@@ -432,7 +441,7 @@ public class BluemoonSeleniumHelper {
     public List<WebElement> findsByClassName(String className) throws Exception {
         List<WebElement> list;
         while (true) {
-            list = browser.findElementsByClassName(className);
+            list = driver.findElementsByClassName(className);
             if (!list.isEmpty()) {
                 break;
             }
@@ -476,6 +485,10 @@ public class BluemoonSeleniumHelper {
                     .get(0);
             tryToClick(webElement);
         }
+    }
+
+    public ChromeDriver getDriver() {
+        return driver;
     }
 
     public void sleep() throws Exception {
