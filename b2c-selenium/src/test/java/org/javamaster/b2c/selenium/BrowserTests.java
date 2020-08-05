@@ -23,7 +23,7 @@ public class BrowserTests {
         helper.loginToSystem("80546269", "qq123123");
     }
 
-    // @After
+    @After
     public void closeBrowser() {
         helper.exitBrowser();
     }
@@ -55,7 +55,7 @@ public class BrowserTests {
         logger.info("{}", helper.bagCollect("80546269"));
 
         helper.switchToDefaultFrame();
-        List<String> clothesCodes = helper.bagCollectManage(1);
+        List<String> clothesCodes = helper.bagCollectManage(2);
         logger.info("{}", clothesCodes);
 
         helper.switchToDefaultFrame();

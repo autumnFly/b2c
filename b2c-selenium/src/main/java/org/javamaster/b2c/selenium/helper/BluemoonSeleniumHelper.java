@@ -101,7 +101,7 @@ public class BluemoonSeleniumHelper {
         // 切换到接收衣物iframe
         switchToTargetFrameBySrc("/wash/hotel/pack/clothesReceive.jsp");
         // 选择出库方式
-        executeAndTryToSetNuiValue("outWays", "pick_up_out_way");
+        executeAndTryToSetNuiValue("outWays", "person_out_way");
         List<Map<String, Object>> mapList = executeAndTryToGetList("return grid.data");
         for (int i = 0; i < mapList.size(); i++) {
             // 选择待登记衣物
