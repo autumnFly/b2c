@@ -21,17 +21,18 @@ import java.io.File;
  */
 @Slf4j
 public class XpathTest {
-    private static DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    private static XPathFactory xPathFactory = XPathFactory.newInstance();
+    public static DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    public static XPathFactory xPathFactory = XPathFactory.newInstance();
 
     @Test
     public void test() throws Exception {
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
+        XPath xPath = xPathFactory.newXPath();
+
         File file = ResourceUtils.getFile("classpath:bookstore.xml");
         Document document = documentBuilder.parse(file);
         Element rootEle = document.getDocumentElement();
 
-        XPath xPath = xPathFactory.newXPath();
 
         // 选取bookstore元素
         NodeList nodeList = (NodeList) xPath.evaluate("bookstore", document, XPathConstants.NODESET);

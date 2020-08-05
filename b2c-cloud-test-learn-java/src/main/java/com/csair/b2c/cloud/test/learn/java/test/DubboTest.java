@@ -32,7 +32,7 @@ import com.bluemoon.pf.map.sdk.vo.AddressVo;
 import com.bluemoon.pf.map.service.BasicMapService;
 import com.bluemoon.proxy.service.sms.EmailService;
 import com.bluemoon.proxy.service.sms.SmsService;
-import com.csair.b2c.cloud.test.dubbo.provider.api.service.UserDubboService;
+// import com.csair.b2c.cloud.test.dubbo.provider.api.service.UserDubboService;
 import com.csair.b2c.cloud.test.learn.java.utils.DubboUtils;
 import com.csair.b2c.cloud.test.learn.java.utils.OMUtils;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -134,9 +134,9 @@ public class DubboTest {
 
     @Test
     public void test6() {
-        UserDubboService service = DubboUtils.getService(UserDubboService.class, "1.0.0", "127.0.0.1:21899");
-        Object resObj = service.queryAll();
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        // UserDubboService service = DubboUtils.getService(UserDubboService.class, "1.0.0", "127.0.0.1:21899");
+        // Object resObj = service.queryAll();
+        // System.out.println(OMUtils.writeValueA/sString(resObj, true));
     }
 
     @Test
