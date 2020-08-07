@@ -1,6 +1,6 @@
 package org.javamaster.b2c.selenium;
 
-import org.javamaster.b2c.selenium.helper.BluemoonSeleniumHelper;
+import org.javamaster.b2c.selenium.service.SeleniumService;
 import org.javamaster.b2c.selenium.utils.PropertiesUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -23,57 +23,54 @@ import java.util.List;
 public class BrowserTests {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyy-MM-dd-HH-mm-ss");
     private Logger logger = LoggerFactory.getLogger(getClass());
-    private BluemoonSeleniumHelper helper = new BluemoonSeleniumHelper();
+    private SeleniumService service = new SeleniumService();
 
     @Before
-    public void loginToSystem() throws Exception {
-        helper.loginToSystem(PropertiesUtils.getProp("angel.code"), PropertiesUtils.getProp("angel.password"));
+    public void loginToSystem() {
+        service.loginToSystem(PropertiesUtils.getProp("angel.code"), PropertiesUtils.getProp("angel.password"));
     }
 
     @After
     public void closeBrowser() throws Exception {
-        File srcFile = helper.getDriver().getScreenshotAs(OutputType.FILE);
+        File srcFile = service.getDriver().getScreenshotAs(OutputType.FILE);
         File picDir = new File("pic");
         assert picDir.exists() || picDir.mkdir();
         File targetFile = new File(picDir, LocalDateTime.now().format(formatter) + ".png");
         Files.copy(srcFile.toPath(), targetFile.toPath());
-        helper.exitBrowser();
+        service.exitBrowser();
     }
 
     @Test
-    public void bagCollect() throws Exception {
-        logger.info("{}", helper.bagCollect(PropertiesUtils.getProp("angel.code")));
+    public void bagCollect() {
+        logger.info("{}", service.bagCollect(PropertiesUtils.getProp("angel.code")));
     }
 
     @Test
-    public void bagCollectManage() throws Exception {
-        logger.info("{}", helper.bagCollectManage(1));
+    public void bagCollectManage() {
+        logger.info("{}", service.bagCollectManage(1));
     }
 
     @Test
-    public void sortingBeforeWash() throws Exception {
-        List<String> clothesCodes = Arrays.asList("fWGaxj8ayu", "bPgFNeSuyu");
-        helper.sortingBeforeWash(clothesCodes);
+    public void sortingBeforeWash() {
+        List<String> clothesCodes = Arrays.asList("O0qxoaKpyu", "uylglfdfyu", "557hi1iKyu");
+        service.sortingBeforeWash(clothesCodes);
     }
 
     @Test
-    public void centerWashManager() throws Exception {
-        helper.centerWashManager(1);
+    public void centerWashManager() {
+        service.centerWashManager(1);
     }
 
 
     @Test
-    public void completeProcess() throws Exception {
-        logger.info("{}", helper.bagCollect(PropertiesUtils.getProp("angel.code")));
+    public void completeProcess() {
+        logger.info("{}", service.bagCollect(PropertiesUtils.getProp("angel.code")));
 
-        helper.switchToDefaultFrame();
-        List<String> clothesCodes = helper.bagCollectManage(1);
+        List<String> clothesCodes = service.bagCollectManage(1);
         logger.info("{}", clothesCodes);
 
-        helper.switchToDefaultFrame();
-        helper.sortingBeforeWash(clothesCodes);
+        service.sortingBeforeWash(clothesCodes);
 
-        helper.switchToDefaultFrame();
-        helper.centerWashManager(clothesCodes.size());
+        service.centerWashManager(clothesCodes.size());
     }
 }
