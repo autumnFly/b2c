@@ -50,9 +50,9 @@ public class SeleniumService {
         tryToClick(driver, driver.findElementById("addExceptionClothes"));
         // 切换到接收收衣袋iframe
         switchToChildFrame(driver);
+        sleep(2);
         // 输入转交人编码并点击enter健
         driver.findElementById("empCode$text").sendKeys(angelCode + Keys.ENTER);
-        sleep(2);
         List<Map<String, Object>> mapList = executeAndTryToGetList(driver, "return grid.data");
         // 得到所有的收衣袋编码
         List<String> bagCodes = mapList.stream()
@@ -63,7 +63,7 @@ public class SeleniumService {
             driver.findElementById("searchPackCode$text").sendKeys(bagCode + Keys.ENTER);
             // 点击弹框(div)的确定按钮关闭弹框
             tryToClick(driver, driver.findElementByCssSelector("div.mini-panel.mini-window.mini-window-drag span.mini-button-text"));
-            sleep(2);
+            sleep(1);
         }
         // 点击完成收衣袋接收
         tryToClick(driver, driver.findElementById("save_bt"));
@@ -82,6 +82,7 @@ public class SeleniumService {
         clickMenu("收衣袋收衣管理");
         // 切换到收衣袋收衣管理iframe
         switchToTargetFrameById(driver, "iframe_hotel_clothes_receive_manager");
+        sleep(2);
         for (int i = 0; i < collectLimit; i++) {
             // 固定选择第一条记录
             executeAndTryToSelectNuiGridRow("grid", 0);
@@ -102,6 +103,7 @@ public class SeleniumService {
         List<String> clothesCodes = new ArrayList<>();
         // 切换到接收衣物iframe
         switchToTargetFrameBySrc(driver, "/wash/hotel/pack/clothesReceive.jsp");
+        sleep(2);
         // 选择出库方式
         executeAndTryToSetNuiValue("outWays", "personal_out_way");
         List<Map<String, Object>> mapList = executeAndTryToGetList(driver, "return grid.data");
@@ -144,7 +146,7 @@ public class SeleniumService {
             driver.findElementById("makeup").sendKeys(PropertiesUtils.getPropListRandomOne("pic.paths"));
             // 上传
             executeAndDoNothing(driver, "uploadFile('makeup')");
-            sleep(3);
+            sleep(2);
             // 点击保存
             tryToClick(driver, driver.findElementById("save_btn"));
             switchToParentFrame(driver);
@@ -171,12 +173,14 @@ public class SeleniumService {
         clickMenu("洗前分拣管理", "sorting_before_wash_manage");
         // 切换到洗前分拣管理iframe
         switchToTargetFrameById(driver, "iframe_sorting_before_wash_manage");
+        sleep(2);
         boolean noChoose = true;
         for (String clothesCode : clothesCodes) {
             // 输入衣物编码
             executeAndDoNothing(driver, String.format("vue.$data.clothesCode='%s'", clothesCode));
             // 直接调用点击enter键触发的函数
             executeAndDoNothing(driver, "vue.getClothesInfoWithEnter()");
+            waitEleDisappearById(driver, "divMask");
             if (noChoose) {
                 noChoose = false;
                 // 点击精洗
@@ -197,6 +201,7 @@ public class SeleniumService {
         clickMenu("洗衣中心洗护管理");
         // 切换到洗衣中心洗护管理iframe
         switchToTargetFrameById(driver, "iframe_wash_manager");
+        sleep(2);
         for (int i = 0; i < collectLimit; i++) {
             // 选择记录
             executeAndTryToSelectNuiGridRow("grid", i);

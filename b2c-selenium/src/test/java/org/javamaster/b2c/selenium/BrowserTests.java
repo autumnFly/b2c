@@ -2,9 +2,7 @@ package org.javamaster.b2c.selenium;
 
 import org.javamaster.b2c.selenium.service.SeleniumService;
 import org.javamaster.b2c.selenium.utils.PropertiesUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.openqa.selenium.OutputType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +50,7 @@ public class BrowserTests {
 
     @Test
     public void sortingBeforeWash() {
-        List<String> clothesCodes = Arrays.asList("O0qxoaKpyu", "uylglfdfyu", "557hi1iKyu");
+        List<String> clothesCodes = Arrays.asList("tuohkigkyu", "irpliegsyu");
         service.sortingBeforeWash(clothesCodes);
     }
 
@@ -64,9 +62,10 @@ public class BrowserTests {
 
     @Test
     public void completeProcess() {
-        logger.info("{}", service.bagCollect(PropertiesUtils.getProp("angel.code")));
+        List<String> bagCodes = service.bagCollect(PropertiesUtils.getProp("angel.code"));
+        logger.info("{}", bagCodes);
 
-        List<String> clothesCodes = service.bagCollectManage(1);
+        List<String> clothesCodes = service.bagCollectManage(bagCodes.size());
         logger.info("{}", clothesCodes);
 
         service.sortingBeforeWash(clothesCodes);
