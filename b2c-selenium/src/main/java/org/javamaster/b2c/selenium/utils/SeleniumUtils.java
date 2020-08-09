@@ -32,6 +32,19 @@ public class SeleniumUtils {
         return list;
     }
 
+    public static List<WebElement> findsByXpath(RemoteWebDriver driver, String xpath) {
+        List<WebElement> list;
+        while (true) {
+            sleep();
+            list = driver.findElementsByXPath(xpath);
+            if (!list.isEmpty()) {
+                break;
+            }
+            logger.error("findsByXpath list empty:" + xpath);
+        }
+        return list;
+    }
+
     public static void waitEleDisappearById(RemoteWebDriver driver, String id) {
         driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
         sleep();

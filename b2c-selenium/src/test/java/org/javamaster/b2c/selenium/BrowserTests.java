@@ -50,7 +50,10 @@ public class BrowserTests {
 
     @Test
     public void sortingBeforeWash() {
-        List<String> clothesCodes = Arrays.asList("tuohkigkyu", "irpliegsyu");
+        List<String> clothesCodes = Arrays.asList(
+                "tuohkigkyu",
+                "irpliegsyu"
+        );
         service.sortingBeforeWash(clothesCodes);
     }
 
