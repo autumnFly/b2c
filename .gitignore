@@ -43,6 +43,7 @@ build
 online-exam
 
 pic
+*.pickle
 
 sakila
 jsexercise/package-lock.json

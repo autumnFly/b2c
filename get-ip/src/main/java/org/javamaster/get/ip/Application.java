@@ -24,7 +24,8 @@ public class Application {
 
     static ThreadLocal<String> threadLocal = ThreadLocal.withInitial(() -> {
         try {
-            return new String(Files.readAllBytes(Paths.get("D:\\User\\天天共享文件夹\\hosts.txt")));
+            return new String(Files.readAllBytes(Paths.get("C:\\Users\\yu\\Nox_share\\ImageShare\\hosts.txt")));
+            // return new String(Files.readAllBytes(Paths.get("D:\\User\\天天共享文件夹\\hosts.txt")));
         } catch (IOException e) {
             e.printStackTrace();
             return "";
@@ -66,13 +67,17 @@ public class Application {
 
             content.append(ip).append("      agent.javamaster.org\n");
             FileWriter fileWriter = null;
+            FileWriter fileWriter1 = null;
             try {
-                File file = new File("D:\\User\\天天共享文件夹\\hosts.txt");
+                File file = new File("C:\\Users\\yu\\Nox_share\\ImageShare\\hosts.txt");
+                File file1 = new File("D:\\User\\天天共享文件夹\\hosts.txt");
 
                 String oldHostsContent = threadLocal.get();
                 if (!oldHostsContent.equals(content.toString())) {
                     fileWriter = new FileWriter(file);
+                    fileWriter1 = new FileWriter(file1);
                     fileWriter.write(content.toString());
+                    fileWriter1.write(content.toString());
                     threadLocal.set(content.toString());
                 }
             } catch (Exception e) {
@@ -81,9 +86,12 @@ public class Application {
                 if (fileWriter != null) {
                     fileWriter.close();
                 }
+                if (fileWriter1 != null) {
+                    fileWriter1.close();
+                }
             }
             logger.info(ip);
-            TimeUnit.SECONDS.sleep(3);
+            TimeUnit.SECONDS.sleep(10);
         }
 
     }
