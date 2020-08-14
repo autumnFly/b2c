@@ -31,7 +31,6 @@
     <modules>
         <module>b2c-cloud-test-boot</module>
         <module>b2c-cloud-test-ribbon</module>
-        <module>b2c-cloud-test-feign</module>
         <module>b2c-cloud-test-hystrix</module>
         <module>b2c-cloud-test-security</module>
         <module>b2c-cloud-test-learn-maven</module>
@@ -43,12 +42,8 @@
         <module>b2c-cloud-test-zuul</module>
         <module>b2c-cloud-test-jms</module>
         <module>b2c-cloud-test-websocket</module>
-        <module>b2c-cloud-test-dubbo-provider</module>
-        <module>b2c-cloud-test-dubbo-provider-api</module>
-        <module>b2c-cloud-test-dubbo-consumer</module>
         <module>b2c-cloud-test-mybatistk</module>
         <module>b2c-cloud-test-user</module>
-        <module>b2c-cloud-test-batch</module>
         <module>b2c-cloud-test-kotlin</module>
         <module>b2c-cloud-test-scheduled</module>
     </modules>
