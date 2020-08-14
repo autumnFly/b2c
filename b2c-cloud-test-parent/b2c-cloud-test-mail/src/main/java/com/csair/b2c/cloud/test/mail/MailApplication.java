@@ -59,25 +59,6 @@ public class MailApplication extends WebMvcConfigurerAdapter {
         SpringApplication.run(MailApplication.class, args);
     }
 
-    @Bean
-    public JavaMailSender javaMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost(env.getProperty("mail.host"));
-        mailSender.setUsername(env.getProperty("mail.username"));
-        mailSender.setPassword(env.getProperty("mail.password"));
-        logger.info("mail host:{},username:{},password:{}", mailSender.getHost(), mailSender.getUsername(),
-                mailSender.getPassword());
-        mailSender.setDefaultEncoding("UTF-8");
-        Properties prop = new Properties();
-        prop.put("mail.smtp.auth", env.getProperty("mail.prop.mail.smtp.auth"));
-        prop.put("mail.smtp.starttls.enable", env.getProperty("mail.prop.mail.smtp.starttls.enable"));
-        // 设置调试模式可以在控制台查看发送过程
-        prop.put("mail.debug", env.getProperty("mail.prop.mail.debug"));
-        prop.put("mail.smtp.starttls.required", env.getProperty("mail.prop.mail.smtp.starttls.required"));
-        logger.info("mail props:{}", JSONObject.toJSONString(prop, true));
-        mailSender.setJavaMailProperties(prop);
-        return mailSender;
-    }
 
     @Bean
     public DateFormatter dateFormatter() {

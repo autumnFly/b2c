@@ -12,6 +12,6 @@
 		http://www.springframework.org/schema/util
         http://www.springframework.org/schema/util/spring-util-3.2.xsd">
         
-	<bean name="/home" class="com.csair.com.cloud.test.boot.controller.HomeController"/>
+	<bean name="/home" class="com.csair.b2c.cloud.test.boot.controller.HomeController"/>
 	
 </beans>
