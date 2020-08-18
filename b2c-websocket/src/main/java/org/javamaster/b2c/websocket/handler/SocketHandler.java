@@ -1,4 +1,4 @@
-package com.csair.b2c.cloud.test.websocket.service;
+package org.javamaster.b2c.websocket.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,8 +7,10 @@ import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import java.util.concurrent.TimeUnit;
 
+/**
+ * @author yudong
+ */
 @Component
 @ServerEndpoint(value = "/macro")
 public class SocketHandler extends AbstractWebSocketHandler {
@@ -17,7 +19,7 @@ public class SocketHandler extends AbstractWebSocketHandler {
 
     @OnOpen
     public void onOpen(Session session) {
-        logger.info("connect");
+        logger.info("connect:{}", session.getId());
     }
 
     @OnClose
@@ -27,12 +29,12 @@ public class SocketHandler extends AbstractWebSocketHandler {
 
     @OnMessage
     public void onMessage(String message, Session session) throws Exception {
-        logger.info("receive:" + message + " from js");
-        TimeUnit.SECONDS.sleep(2);
-        session.getBasicRemote().sendText("send polo to js! " + i++);
+        logger.info("receive {} from js,session id:{}", message, session.getId());
+        session.getBasicRemote().sendText("important java message " + i++);
     }
 
     @OnError
     public void onError(Session session, Throwable error) {
+        logger.info("receive {} from js,session id:{}", error.getClass().getSimpleName(), session.getId());
     }
 }

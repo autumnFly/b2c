@@ -1,24 +1,22 @@
-package com.csair.b2c.cloud.test.websocket;
+package org.javamaster.b2c.websocket;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
-import com.csair.b2c.cloud.test.common.constant.ProjectConst;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+/**
+ * @author yudong
+ */
 @EnableWebSocket
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = ProjectConst.REDIS_SESSION_EXPIRED_TIME)
-@ComponentScan(basePackages = "com.csair.b2c")
 @SpringBootApplication
 public class WebSocketApplication {
     public static void main(String[] args) {
         SpringApplication.run(WebSocketApplication.class, args);
+        System.out.println("http://localhost:9600/websocket");
     }
 
     @Bean
