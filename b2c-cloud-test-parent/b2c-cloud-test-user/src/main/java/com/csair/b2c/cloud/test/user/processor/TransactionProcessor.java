@@ -6,12 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.sql.Connection;
 
 /**

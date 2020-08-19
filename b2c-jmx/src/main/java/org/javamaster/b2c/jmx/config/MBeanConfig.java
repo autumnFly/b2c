@@ -1,6 +1,6 @@
-package com.csair.b2c.cloud.test.user.config;
+package org.javamaster.b2c.jmx.config;
 
-import com.csair.b2c.cloud.test.user.jmx.LoginListener;
+import org.javamaster.b2c.jmx.listener.JmxListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,11 +22,11 @@ public class MBeanConfig {
     private MBeanExporter exporter;
 
     @Bean
-    public LoginListener loginListener() {
-        LoginListener loginListener = new LoginListener();
+    public JmxListener loginListener() {
+        JmxListener loginListener = new JmxListener();
         Map<String, NotificationListener> listeners = new HashMap<>(5);
         // 通过objectName指定listener要监听的通知类
-        listeners.put("user:name=UserServiceImpl", loginListener);
+        listeners.put("org.javamaster.b2c:mbean=SendJmxRunner", loginListener);
         exporter.setNotificationListenerMappings(listeners);
         return loginListener;
     }
