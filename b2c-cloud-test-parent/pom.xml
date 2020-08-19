@@ -35,16 +35,11 @@
         <module>b2c-cloud-test-security</module>
         <module>b2c-cloud-test-learn-maven</module>
         <module>b2c-cloud-test-redis</module>
-        <module>b2c-cloud-test-mongodb</module>
         <module>b2c-cloud-test-session</module>
-        <module>b2c-cloud-test-rpc</module>
-        <module>b2c-cloud-test-mail</module>
         <module>b2c-cloud-test-zuul</module>
         <module>b2c-cloud-test-jms</module>
-        <module>b2c-cloud-test-websocket</module>
         <module>b2c-cloud-test-mybatistk</module>
         <module>b2c-cloud-test-user</module>
-        <module>b2c-cloud-test-kotlin</module>
         <module>b2c-cloud-test-scheduled</module>
     </modules>
 
@@ -83,16 +78,6 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
         <dependency>
@@ -110,16 +95,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.session</groupId>
@@ -142,11 +117,6 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.7</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
