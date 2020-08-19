@@ -18,8 +18,9 @@ ribbon:
   # 切换实例的重试次数
   MaxAutoRetriesNextServer: 1
 server:
-  port: 9000    
-  context-path: /zuul
+  port: 9000
+  servlet:
+    context-path: /zuul
 eureka:
   instance:
     hostname: eureka.dev.csair.com
@@ -34,29 +35,11 @@ eureka:
     fetchRegistry: true      
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
-management:
-  security:
-    enabled: false
 zuul:
   routes:
-    mail:
-      path: /mail/**
-      serviceId: b2c-cloud-test-mail
-      customSensitiveHeaders: true
-      sensitiveHeaders:
-    feign:
-      path: /feign/**
-      serviceId: b2c-cloud-test-feign
-      customSensitiveHeaders: true
-      sensitiveHeaders:
     redis:
       path: /redis/**
       serviceId: b2c-cloud-test-redis
-      customSensitiveHeaders: true
-      sensitiveHeaders:
-    mybatis:
-      path: /mybatis/**
-      serviceId: b2c-cloud-test-mybatis
       customSensitiveHeaders: true
       sensitiveHeaders:
     user:

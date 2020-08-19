@@ -1,11 +1,9 @@
 package com.csair.b2c.cloud.test.hystrix.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import com.csair.b2c.cloud.test.common.constant.ProjectConst;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 /**
  * @author yu
@@ -17,9 +15,7 @@ public class VersionService {
 
     @HystrixCommand(fallbackMethod = "addFallback")
     public String versionZuul() {
-        return restTemplate.getForEntity(
-                ProjectConst.ZUUL_SERVICE_PREFIX + "/info",
-                String.class).getBody();
+        return restTemplate.getForEntity("http://b2c-cloud-test-zuul/zuul/info", String.class).getBody();
     }
 
     public String addFallback() {

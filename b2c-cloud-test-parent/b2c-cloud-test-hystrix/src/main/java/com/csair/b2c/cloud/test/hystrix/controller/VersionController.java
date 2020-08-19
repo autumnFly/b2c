@@ -1,18 +1,18 @@
 package com.csair.b2c.cloud.test.hystrix.controller;
 
-import com.csair.b2c.cloud.test.common.constant.ProjectConst;
 import com.csair.b2c.cloud.test.hystrix.service.VersionFeignService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.csair.b2c.cloud.test.hystrix.service.VersionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * @author yu
+ */
 @RestController
-@RequestMapping("version")
+@RequestMapping("/version")
 public class VersionController {
+
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
@@ -20,19 +20,17 @@ public class VersionController {
     @Autowired
     private VersionFeignService versionFeignService;
 
-    @RequestMapping(value = "zuul/normal", method = {RequestMethod.GET})
+    @RequestMapping(value = "/zuul/normal", method = {RequestMethod.GET})
     public String versionZuulNormal() {
-        return restTemplate.getForEntity(
-                ProjectConst.ZUUL_SERVICE_PREFIX + "/info",
-                String.class).getBody();
+        return restTemplate.getForEntity("http://b2c-cloud-test-zuul/zuul/info", String.class).getBody();
     }
 
-    @RequestMapping(value = "zuul/fallback", method = {RequestMethod.GET})
+    @RequestMapping(value = "/zuul/fallback", method = {RequestMethod.GET})
     public String versionZuul() {
         return versionService.versionZuul();
     }
 
-    @RequestMapping(value = "zuul/feign", method = {RequestMethod.GET})
+    @RequestMapping(value = "/zuul/feign", method = {RequestMethod.GET})
     public String versionRedis() {
         return versionFeignService.versionZuul();
     }
