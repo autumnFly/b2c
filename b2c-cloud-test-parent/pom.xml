@@ -37,8 +37,6 @@
         <module>b2c-cloud-test-redis</module>
         <module>b2c-cloud-test-session</module>
         <module>b2c-cloud-test-zuul</module>
-        <module>b2c-cloud-test-jms</module>
-        <module>b2c-cloud-test-mybatistk</module>
         <module>b2c-cloud-test-user</module>
         <module>b2c-cloud-test-scheduled</module>
     </modules>
