@@ -33,7 +33,6 @@
         <module>b2c-cloud-test-ribbon</module>
         <module>b2c-cloud-test-hystrix</module>
         <module>b2c-cloud-test-security</module>
-        <module>b2c-cloud-test-learn-maven</module>
         <module>b2c-cloud-test-redis</module>
         <module>b2c-cloud-test-session</module>
         <module>b2c-cloud-test-zuul</module>
