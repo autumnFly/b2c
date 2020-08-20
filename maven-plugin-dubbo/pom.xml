@@ -4,21 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.com.bluemoon.washing</groupId>
-    <artifactId>washing.maven.plugin</artifactId>
+    <groupId>org.javamaster.maven</groupId>
+    <artifactId>maven-plugin-dubbo</artifactId>
     <version>1.0-SNAPSHOT</version>
-
     <packaging>maven-plugin</packaging>
-
-    <name>b2c-cloud-test-plugin Maven Plugin</name>
-
-    <!-- FIXME change it to the project's website -->
-    <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -56,7 +51,7 @@
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>3.5</version>
                 <configuration>
-                    <goalPrefix>washing.maven.plugin</goalPrefix>
+                    <goalPrefix>dubbo</goalPrefix>
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
                 </configuration>
                 <executions>
@@ -88,7 +83,6 @@
         <profile>
             <id>run-its</id>
             <build>
-
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -120,9 +114,8 @@
                         </executions>
                     </plugin>
                 </plugins>
-
             </build>
         </profile>
     </profiles>
-    
+
 </project>
