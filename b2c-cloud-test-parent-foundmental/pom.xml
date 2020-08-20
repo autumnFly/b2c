@@ -18,9 +18,7 @@
 		<module>b2c-cloud-test-config</module>
 		<module>b2c-cloud-test-common</module>
 		<module>b2c-cloud-test-model</module>
-        <module>b2c-cloud-test-plugin</module>
         <module>b2c-cloud-test-config-git</module>
-        <module>b2c-cloud-test-dubbo-bluemoon-consumer</module>
         <module>b2c-cloud-test-annotation-processor</module>
     </modules>
 
