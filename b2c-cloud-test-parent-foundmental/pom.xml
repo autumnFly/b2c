@@ -17,7 +17,6 @@
 		<module>b2c-cloud-test-eureka</module>
 		<module>b2c-cloud-test-config</module>
 		<module>b2c-cloud-test-common</module>
-		<module>../b2c-cloud-test-sys</module>
 		<module>b2c-cloud-test-model</module>
         <module>b2c-cloud-test-plugin</module>
         <module>b2c-cloud-test-config-git</module>

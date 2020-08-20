@@ -2,7 +2,7 @@ package com.csair.b2c.cloud.test.user.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.csair.b2c.cloud.test.common.model.Result;
-import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

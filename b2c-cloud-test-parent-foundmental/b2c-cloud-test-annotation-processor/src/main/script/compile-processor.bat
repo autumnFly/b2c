@@ -1,5 +1,5 @@
-set  output-directory=D:\b2c\b2c-cloud-test-parent-foundmental\b2c-cloud-test-annotation-processor\target
-set  source-directory=D:\b2c\b2c-cloud-test-parent-foundmental\b2c-cloud-test-annotation-processor\src\main\java
+set  output-directory=..\..\..\target
+set  source-directory=..\java
 set  java8_home=D:\java\64\jdk1.8.0_131
 if exist %output-directory% (echo "directory already exists") else (md %output-directory%\classes\com\csair\b2c\cloud\test\annotation\processor\annotation)
 %java8_home%\bin\javac -version

@@ -13,13 +13,6 @@ public class FilmActor implements Serializable {
     private Integer actorId;
     private Integer filmId;
     private Date lastUpate;
-    public static void main(String[] args) {
-        System.out.println("/M00/5A/5A/wKgwb1w1X8uAacqsAAKpJ8OhKA0583.jpg".startsWith("/"));
-        System.out.println(new java.util.Date(1545900468000L));
-    }
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
 
     public Integer getActorId() {
         return actorId;

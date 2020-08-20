@@ -8,7 +8,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jmx.export.annotation.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,8 +27,6 @@ import java.util.UUID;
  * @author yudong
  */
 @Service
-@ManagedResource(objectName = "user:name=UserServiceImpl")
-@ManagedNotification(notificationTypes = "user.login", name = "tryLogin")
 public class UserServiceImpl implements UserService {
     @Autowired
     private UsersMapper usersMapper;
@@ -37,34 +34,20 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private static String keyPrefix = "spring:user:sessions:";
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
     private UserDetailsService userDetailsService;
 
-    private int pageSize = 3;
-
-    @ManagedAttribute
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    @ManagedAttribute
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
     @Override
-    @ManagedOperation
     public Pair<String, UserDetailBean> login(Users users) {
         final Authentication authentication = authenticationManager.authenticate(
                 new TestingAuthenticationToken(userDetailsService.loadUserByUsername(users.getUsername()), users.getPassword()));
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(authentication);
         UserDetailBean userDetailBean = (UserDetailBean) authentication.getPrincipal();
+        String keyPrefix = "spring:user:sessions:";
         return new Pair<>(keyPrefix + UUID.randomUUID().toString(), userDetailBean);
     }
 

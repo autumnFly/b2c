@@ -16,22 +16,13 @@ package com.csair.b2c.cloud.test.plugin;
  * limitations under the License.
  */
 
-import com.csair.b2c.cloud.test.learn.java.bytecode.ClassFileReader;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.*;
+import org.objectweb.asm.ClassReader;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
+import java.io.*;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,9 +46,7 @@ public class GenerateServicesFileMojo extends AbstractMojo {
     @Parameter(property = "outputDir")
     private static String[] includes;
 
-    private static List<File> javaFiles = new ArrayList<>();
-
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         String path = "D:\\b2c\\b2c-cloud-test-parent-foundmental\\b2c-cloud-test-annotation-processor\\target\\classes";
 
         List<File> javaClassFiles = getJavaClassFiles(Paths.get(path));
@@ -71,7 +60,7 @@ public class GenerateServicesFileMojo extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException {
         List<File> javaClassFiles = new ArrayList<>();
-        getAndfillJavaClassFiles(outputDirectory.getAbsolutePath(), javaClassFiles);
+        getAndFillJavaClassFiles(outputDirectory.getAbsolutePath(), javaClassFiles);
 
         File file = new File(outputDirectory, "META-INF/services");
         if (!file.exists()) {
@@ -93,22 +82,12 @@ public class GenerateServicesFileMojo extends AbstractMojo {
         }
 
         List<String> className = getProcessorClassNames(javaClassFiles);
-        FileWriter w = null;
-        try {
-            w = new FileWriter(processorFile);
+        try (FileWriter w = new FileWriter(processorFile)) {
             for (String s : className) {
                 w.write(s + "\r\n");
             }
         } catch (IOException e) {
             throw new MojoExecutionException("Error creating file " + processorFile, e);
-        } finally {
-            if (w != null) {
-                try {
-                    w.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
         }
 
     }
@@ -132,12 +111,13 @@ public class GenerateServicesFileMojo extends AbstractMojo {
         return javaClassFiles;
     }
 
-    public static void getAndfillJavaClassFiles(String dir, List<File> javaFiles) {
+    public static void getAndFillJavaClassFiles(String dir, List<File> javaFiles) {
         File file = new File(dir);
         File[] files = file.listFiles();
+        assert files != null;
         for (File tempFile : files) {
             if (tempFile.isDirectory()) {
-                getAndfillJavaClassFiles(tempFile.getAbsolutePath(), javaFiles);
+                getAndFillJavaClassFiles(tempFile.getAbsolutePath(), javaFiles);
             } else {
                 if (tempFile.getName().endsWith(".class")) {
                     javaFiles.add(tempFile);
@@ -150,11 +130,11 @@ public class GenerateServicesFileMojo extends AbstractMojo {
         try {
             List<String> classNames = new ArrayList<>();
             for (File file : javaClassFiles) {
-                ClassFileReader classFileReader = new ClassFileReader(new FileInputStream(file));
-                String className = classFileReader.getClassName();
-                String superClassName = classFileReader.getSuperClassName();
-                boolean isAnnotationProcessor = superClassName.equals("javax.annotation.processing.AbstractProcessor");
+                ClassReader classFileReader = new ClassReader(new FileInputStream(file));
+                String superClassName = classFileReader.getSuperName().replace("/", ".");
+                boolean isAnnotationProcessor = "javax.annotation.processing.AbstractProcessor".equals(superClassName);
                 if (isAnnotationProcessor) {
+                    String className = classFileReader.getClassName().replace("/", ".");
                     classNames.add(className);
                 }
             }
