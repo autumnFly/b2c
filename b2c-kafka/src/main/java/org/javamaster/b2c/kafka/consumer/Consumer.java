@@ -17,7 +17,7 @@ public class Consumer {
 
     @KafkaListener(groupId = "test_group", topics = "topic_order_code", errorHandler = "kafkaErrorHandler")
     public void handler(ConsumerRecord<Object, Object> consumerRecord) {
-        log.info("consumer times:{},{}", anInt++, consumerRecord.value());
+        log.info("consumer times:{},{},{}", anInt++, consumerRecord.key(), consumerRecord.value());
         // if (anInt < 16) {
         //     // 若消费失败,则消息会重新回到kafka(未指定errorHandler的情况下)
         //     throw new RuntimeException("模拟异常");

@@ -385,10 +385,28 @@ public class DubboTest {
         PortalAppService service = DubboUtils.getService(PortalAppService.class, null);
         Object resObj = service.getRoleListByUser("80546269");
         System.out.println(OMUtils.writeValueAsString(resObj, true));
-        JsonNode roleListResJson = OMUtils.objectMapper.readValue((String)resObj, JsonNode.class);
+        JsonNode roleListResJson = OMUtils.objectMapper.readValue((String) resObj, JsonNode.class);
         Iterator<JsonNode> iterable = roleListResJson.get("info").iterator();
         iterable.forEachRemaining(jsonNode -> {
             System.out.println(jsonNode.asText());
         });
     }
+
+
+    @Test
+    public void test35() {
+        DubboCommonService service = DubboUtils.getService(DubboCommonService.class, "1.0.0-yudong");
+        // DubboCommonService service = DubboUtils.getService(DubboCommonService.class, null);
+        Object resObj = service.updateOuterOrderStatus("TW200720142145054721", "OUTER_CANCEL");
+        // Object resObj = service.updateOuterOrderStatus("TW200720142145054721", "OUTER_WAIT");
+        System.out.println(resObj);
+    }
+
+    @Test
+    public void test36() {
+        WashOrderService service = DubboUtils.getService(WashOrderService.class, "1.0.0");
+        Object resObj = service.getPayTypeInfoByOuterCode("TW200721144121203381");
+        System.out.println(resObj);
+    }
+
 }
