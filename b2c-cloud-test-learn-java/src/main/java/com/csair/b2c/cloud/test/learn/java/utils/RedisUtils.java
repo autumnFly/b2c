@@ -30,7 +30,7 @@ public class RedisUtils {
     public static JedisConnectionFactory factory;
     public static RedisTemplate<Object, Object> redisTemplate;
 
-    static {
+    public static void init() {
         Pair<JedisConnectionFactory, RedisTemplate<Object, Object>> pairDev = redisTemplate(BlueMoonConsts.Local.REDIS_URL,
                 BlueMoonConsts.Local.REDIS_PORT, BlueMoonConsts.Local.REDIS_PASSWORD);
         factoryDev = pairDev.getKey();

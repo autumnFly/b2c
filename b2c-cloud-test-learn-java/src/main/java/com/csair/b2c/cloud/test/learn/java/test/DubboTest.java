@@ -118,7 +118,8 @@ public class DubboTest {
     public void test4() throws Exception {
         SsoService service = DubboUtils.getService(SsoService.class, null);
         JSONObject reqJsonObj = new JSONObject();
-        reqJsonObj.put("token", "21fe6aadeb3561241e7e6aca60b5a757");
+        reqJsonObj.put("token", "3163e6314b3265c5386b0477af298146");
+        // reqJsonObj.put("token", "21fe6aadeb3561241e7e6aca60b5a757");
         String string = service.getUserInfoByToken(reqJsonObj);
         JSONObject resObj = JSONObject.fromObject(string);
         System.out.println(OMUtils.writeValueAsString(resObj, true));

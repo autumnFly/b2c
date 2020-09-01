@@ -1,5 +1,6 @@
 let http = require('http')
 let person = require('./person')
+let suites = require('./suites')
 let server = http.createServer((req, res) => {
     console.log("请求:")
     let rawReqContent = ''
@@ -52,6 +53,14 @@ let server = http.createServer((req, res) => {
         })
         let value = getParameter(req.url, 'callback')
         res.write(value + '(' + JSON.stringify(person) + ')')
+        res.end()
+    } else if (req.url.indexOf('/getSuites') !== -1) {
+        res.writeHead(200, {
+            'content-type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': '*',
+        })
+        res.write(JSON.stringify(suites))
         res.end()
     } else {
         res.writeHead(200, {'content-type': 'text/html'})

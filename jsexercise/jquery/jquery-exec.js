@@ -101,4 +101,7 @@ $(function () {
     $("selector").prop("checked", true); // 设置所有匹配元素的checked属性值为true(意即选中所有匹配的复选框或单选框)
     $("selector").removeProp("className"); // 移除所有匹配元素的className属性
 
+    $('tr').each(function () {
+        console.log(arguments[1]);
+    });
 });

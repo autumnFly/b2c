@@ -2,16 +2,15 @@ package com.csair.b2c.cloud.test.learn.java.test;
 
 import com.csair.b2c.cloud.test.learn.java.utils.RedisUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.data.redis.connection.DataType;
-import org.springframework.data.redis.connection.RedisClusterConnection;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.*;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import redis.clients.jedis.Jedis;
 
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.concurrent.Executors;
@@ -26,6 +25,11 @@ public class RedisTest {
 
     private static String REDIS_TEST_KEY = "B2C:CLOUD:TEST:COMPANY";
 
+    @BeforeClass
+    public static void init() {
+        RedisUtils.init();
+    }
+
     @Test
     public void test() {
         RedisTemplate<Object, Object> redisTemplate = RedisUtils.redisTemplateDev;
@@ -36,12 +40,30 @@ public class RedisTest {
     }
 
     @Test
-    public void test1() {
-        RedisTemplate<Object, Object> redisTemplate = RedisUtils.redisTemplateTest;
-        redisTemplate.opsForValue().set(REDIS_TEST_KEY, "bluemoon");
-        Object object = redisTemplate.opsForValue().get(REDIS_TEST_KEY);
-        System.out.println(object);
-        redisTemplate.delete(REDIS_TEST_KEY);
+    public void test1() throws Exception {
+        RedisUtils.factoryTest.setDatabase(4);
+        byte[] data = RedisUtils.factoryTest.getConnection().get("A5D1EAD85A0312EFE0A72A32D72638A1".getBytes(StandardCharsets.UTF_8));
+        BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(data));
+        ObjectInputStream ois = new ObjectInputStream(bis);
+        System.out.println("createTime:" + ois.readLong());
+        System.out.println("createTime:" + ois.readObject());
+        System.out.println("lastAccessedTime:" + ois.readObject());
+        System.out.println("maxInactiveInterval:" + ois.readObject());
+        System.out.println("isNew:" + ois.readObject());
+        System.out.println("isValid:" + ois.readObject());
+        System.out.println("thisAccessedTime:" + ois.readObject());
+        System.out.println("id:" + ois.readObject());
+
+        int count = (int) ois.readObject();
+        System.out.println("attribute count:" + count);
+        for (int i = 0; i < count; i++) {
+            Object name = ois.readObject();
+            Object value = ois.readObject();
+            System.out.println(name + " " + value);
+        }
+
+
+        System.out.println();
     }
 
     @Test

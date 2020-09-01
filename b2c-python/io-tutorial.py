@@ -2,7 +2,11 @@ import os
 import pickle
 import sqlite3
 
-print(os.getcwd())
+s = None
+print(s is not None)
+paths = os.getcwd().split(os.path.sep)
+service_name = paths[len(paths) - 1]
+print(service_name)
 print(os.path.exists("data/book.json"))
 data = open("data/book.json")
 result = ""
@@ -15,6 +19,16 @@ for line in data:
     except ValueError:
         pass
 data.close()
+
+try:
+    with open("data/book.json", "r") as out:
+        lines = out.read().splitlines()
+        for line in lines[30:38]:
+            print(line)
+        for line in lines[-5:]:
+            print(line)
+except IOError as e:
+    print("error" + str(e))
 
 if not os.path.exists("target"):
     os.mkdir("target")
