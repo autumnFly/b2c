@@ -286,13 +286,16 @@ var app16 = new Vue({
     }
 });
 
-// import {componentA} from './components/componentA';
-// var app17 = new Vue({
-//     el: '#app-17',
-//     components: {
-//         'component-a': componentA
-//     }
-// });
+var componentA = {
+    props: ['title'],
+    template: '<div>子组件A的title属性:{{title}}</div>'
+};
+var app17 = new Vue({
+    el: '#app-17',
+    components: {
+        'component-a': componentA
+    }
+});
 
 Vue.component('my-component', {
     props: {
@@ -324,27 +327,280 @@ Vue.component('my-component', {
                 // 这个值必须匹配下列字符串中的一个
                 return ['success', 'warning', 'danger'].indexOf(value) !== -1
             }
+        },
+        propG: Function
+    },
+    methods: {
+        passParamToParent() {
+            this.$emit('changemsg', '来自子组件的内容');
+        },
+    },
+    mounted() {
+        console.log(this.$attrs['prop-h']);
+    },
+    template: `
+        <div>
+          <p :class="propC">{{propF}}</p>
+          <button @click="passParamToParent">传递参数给父组件</button>
+          <button @click="propG">触发父组件函数</button>
+        </div>
+`
+});
+var app18 = new Vue({
+    el: '#app-18',
+    data() {
+        return {
+            msg: 'hello world'
         }
     },
-    template: '<p :class="propC">{{propF}}</p>'
-});
-
-var app18 = new Vue({
-    el: '#app-18'
+    methods: {
+        parentFunc() {
+            alert("由子组件调用触发的父组件函数")
+        }
+    }
 });
 
 var app19 = new Vue({
     el: '#app-19',
-    data:{
-        date:1542461415308
+    data: {
+        date: 1542461415308
     },
     computed: {
         time() {
             return Date.now();
         }
     },
-    filter:{
-        formatDate(){
+    filter: {
+        formatDate() {
         }
     }
+});
+
+var app20 = new Vue({
+    el: '#app-20',
+    computed: {
+        time() {
+            return Date.now();
+        }
+    },
+    template: '<div>当前时间:{{ time }}</div>'
+});
+var app21 = new Vue({
+    el: '#app-21',
+    computed: {
+        time() {
+            return Date.now();
+        }
+    },
+    render(h) {
+        return h('div', "当前时间:" + this.time);
+    }
+});
+
+var app22 = new Vue({
+    el: '#app-22',
+    data() {
+        return {
+            msg: '动态参数',
+            attr: 'id',
+            attrValue: 'dynamic',
+            msg1: '动态事件',
+            attr1: 'click',
+            name: '',
+            showName: true,
+        }
+    },
+    watch: {
+        name() {
+            console.log(this.name);
+        },
+    },
+    beforeCreate() {
+        console.log('beforeCreate')
+    },
+    created() {
+        console.log('created')
+    },
+    beforeMount() {
+        console.log('beforeMount')
+    },
+    mounted() {
+        console.log('mounted')
+    },
+    beforeUpdate() {
+        console.log('beforeUpdate')
+    },
+    updated() {
+        console.log('updated')
+    },
+    beforeDestroy() {
+        console.log('beforeDestroy')
+    },
+    destroyed() {
+        console.log('destroyed')
+    },
+});
+
+// 局部注册组件
+var component1 = {
+    template: '<h2>组件一</h2>',
+    mounted() {
+        console.log('组件一')
+    }
+};
+var component2 = {
+    template: '<h2>组件二</h2>',
+    mounted() {
+        console.log('组件二')
+    }
+};
+var component3 = {
+    template: '<h2>组件三</h2>',
+    mounted() {
+        console.log('组件三')
+    }
+};
+var app23 = new Vue({
+    el: '#app-23',
+    components: {
+        component1,
+        component2,
+        component3,
+    },
+    data() {
+        return {
+            componentName: 'component1'
+        }
+    },
+    methods: {
+        tabClick(event) {
+            this.componentName = event.target.innerText;
+        },
+    },
+});
+
+Vue.component('base-checkbox', {
+    model: {
+        prop: 'checked',
+        event: 'change'
+    },
+    props: {
+        checked: Boolean
+    },
+    template: `
+    <input
+      type="checkbox"
+      v-bind:checked="checked"
+      v-on:change="$emit('change', $event.target.checked)"
+    >
+  `
+});
+var app24 = new Vue({
+    el: '#app-24',
+    data() {
+        return {
+            lovingVue: ''
+        }
+    },
+    watch: {
+        lovingVue() {
+            console.log(this.lovingVue);
+        }
+    }
+});
+
+
+Vue.component('sync-component', {
+    data() {
+        return {
+            index: 0
+        }
+    },
+    methods: {
+        getIndex() {
+            return this.index;
+        },
+        click() {
+            this.$emit('update:title', '点击次数sync:' + ++this.index);
+            this.$emit('update:title1', '点击次数sync:' + this.index);
+        }
+    },
+    template: ` <button @click="click">点击我.sync</button>`
+});
+var app25 = new Vue({
+    el: '#app-25',
+    data() {
+        return {
+            title: 'hello world',
+            title1: 'hello world',
+            count: '',
+        }
+    },
+    methods: {
+        touchSub() {
+            this.count = this.$refs.subRef.getIndex();
+        },
+    }
+});
+
+Vue.component('sub-component1', {
+    provide: function () {
+        return {
+            getSubComponent1Value: this.getSubComponent1Value
+        }
+    },
+    data() {
+        return {
+            subComponent1Value: 'subComponent1Value'
+        }
+    },
+    methods: {
+        getSubComponent1Value() {
+            return this.subComponent1Value;
+        },
+    },
+    mounted() {
+        console.log(this.$root.topParentValue);
+        console.log(this.$parent.topParentValue);
+    },
+    template: ` 
+         <div>
+          <div>sub-component1</div>
+          <slot></slot>
+         </div>
+    `
+});
+Vue.component('sub-component2', {
+    // 依赖注入
+    inject: ["getSubComponent1Value"],
+    data() {
+        return {
+            parentValue: '',
+            subComponent2Value: 'subComponent2Value'
+        }
+    },
+    methods: {
+        click() {
+            this.parentValue = this.getSubComponent1Value();
+        },
+    },
+    mounted() {
+        console.log(this.$root.topParentValue);
+        console.log(this.$parent.$parent.topParentValue);
+    },
+    template: ` 
+          <div>
+            sub-component2
+            <button @click="click">点击调用依赖注入的方法:{{parentValue}}</button>
+          </div>
+    `
+});
+var app26 = new Vue({
+    el: '#app-26',
+    data() {
+        return {
+            topParentValue: 'top parent value',
+        }
+    },
+    methods: {}
 });

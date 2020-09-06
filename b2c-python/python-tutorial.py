@@ -44,6 +44,8 @@ print(list("hello"))
 times = 23
 if times > 23:
     print('good job')
+elif times > 13:
+    print('normal job')
 else:
     print('bad job')
 
@@ -87,3 +89,7 @@ people = {
 }
 if "Alice" in people:
     print(people["Alice"])
+print(people.keys(), people.values(), people.items())
+
+# False None 0 "" {} [] 在条件表达式里均视为False
+print(bool([]), bool(0), True + False + 10)

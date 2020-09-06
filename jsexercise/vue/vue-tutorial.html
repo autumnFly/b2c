@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 
-    <link rel="stylesheet" href="../test.css"/>
+    <link rel="stylesheet" href="../css/core.css"/>
     <!--    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
 
 
@@ -281,13 +281,15 @@
         hello world
     </p>
 </div>
-<!--<h3>局部注册组件</h3>-->
-<!--<div id="app-17">-->
-<!--<component-a title="描述啊啊"></component-a>-->
-<!--</div>-->
+<h3>局部注册组件</h3>
+<div id="app-17">
+    <component-a title="描述啊啊"></component-a>
+</div>
 <h3>自定义组件的prop约束</h3>
 <div id="app-18">
-    <my-component prop-C="bigger" prop-c="hello" prop-f="success"></my-component>
+    <p>{{msg}}</p>
+    <my-component @changemsg="msg=$event" prop-C="bigger" prop-c="hello" prop-f="success" :prop-g="parentFunc"
+                  prop-h="额外子组件未定义参数"></my-component>
 </div>
 
 <h3>filter过滤器</h3>
@@ -295,6 +297,47 @@
     <p>{{date}}</p>
 </div>
 
+<div id="app-20">
+</div>
+<div id="app-21">
+</div>
+
+<div id="app-22">
+    <template>
+        <h1 :[attr]="attrValue">{{msg}} attr设为null可以移除属性</h1>
+        <a @[attr1]="msg1='你点击了我,哈哈哈哈'" style="font-size: large">{{msg1}}</a>
+        <div v-if="showName">
+            姓名:<input type="text" v-model="name">
+        </div>
+    </template>
+</div>
+
+<div id="app-23">
+    <button @click="tabClick">component1</button>
+    <button @click="tabClick">component2</button>
+    <button @click="tabClick">component3</button>
+    <keep-alive include="component1,component2" exclude="component3">
+        <component :is="componentName"></component>
+    </keep-alive>
+</div>
+
+<div id="app-24">
+    <base-checkbox v-model="lovingVue"></base-checkbox>
+</div>
+
+<div id="app-25">
+    <sync-component v-bind:title="title" v-on:update:title="title = $event"></sync-component>
+    <sync-component :title1.sync="title1" ref="subRef"></sync-component>
+    <h1>{{title}}</h1>
+    <h1>{{title1}}</h1>
+    <button @click="touchSub">点击直接调用子组件方法:{{count}}</button>
+</div>
+
+<div id="app-26">
+    <sub-component1>
+        <sub-component2></sub-component2>
+    </sub-component1>
+</div>
 <script src="vue-tutorial.js"></script>
 </body>
 </html>
