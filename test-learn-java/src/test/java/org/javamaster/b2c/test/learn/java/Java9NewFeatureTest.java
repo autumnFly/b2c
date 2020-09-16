@@ -51,8 +51,7 @@ public class Java9NewFeatureTest {
                         .toLocalDateTime().toString()).orElse(np));
 
         System.out.printf("Arguments : %s%n",
-                info.arguments().map(a -> Stream.of(a).collect(
-                        Collectors.joining(" "))).orElse(np));
+                info.arguments().map(a -> String.join(" ", a)).orElse(np));
 
         System.out.printf("User : %s%n", info.user().orElse(np));
     }
@@ -61,7 +60,6 @@ public class Java9NewFeatureTest {
     public void test2() {
         Stream.of("ab", "bb", "cddd", "", "e", "f").takeWhile(s -> s.length() == 2)
                 .forEach(System.out::print);
-        System.out.println();
         System.out.println("---");
         Stream.of("ab", "bb", "cddd", "", "e", "f").dropWhile(s -> s.length() == 2)
                 .forEach(System.out::print);
