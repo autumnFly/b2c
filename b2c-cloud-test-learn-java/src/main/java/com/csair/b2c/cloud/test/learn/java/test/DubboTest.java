@@ -15,6 +15,9 @@ import cn.com.bluemoon.mall.user.dubbo.enums.MatchType;
 import cn.com.bluemoon.mall.user.dubbo.service.UserAddressService;
 import cn.com.bluemoon.mall.user.dubbo.service.UserService;
 import cn.com.bluemoon.mallwash.order.dubbo.service.WashOrderService;
+import cn.com.bluemoon.moonmall.item.dubbo.service.MoonMallItemService;
+import cn.com.bluemoon.moonmall.order.dubbo.service.MoonMallOrderService;
+import cn.com.bluemoon.moonmall.shoppingcart.dubbo.service.MoonMallShoppingCartDubboService;
 import cn.com.bluemoon.service.common.service.RegionService;
 import cn.com.bluemoon.service.customizingorder.api.CustomizingOrderDubboService;
 import cn.com.bluemoon.service.emp.api.MapService;
@@ -35,10 +38,11 @@ import com.bluemoon.pf.map.sdk.vo.AddressVo;
 import com.bluemoon.pf.map.service.BasicMapService;
 import com.bluemoon.proxy.service.sms.EmailService;
 import com.bluemoon.proxy.service.sms.SmsService;
-// import com.csair.b2c.cloud.test.dubbo.provider.api.service.UserDubboService;
+import com.csair.b2c.cloud.test.dubbo.provider.api.service.UserDubboService;
 import com.csair.b2c.cloud.test.learn.java.utils.DubboUtils;
 import com.csair.b2c.cloud.test.learn.java.utils.OMUtils;
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.time.DateUtils;
 import static org.javamaster.b2c.config.BlueMoonConsts.Server.SERVER_1;
@@ -46,15 +50,13 @@ import static org.javamaster.b2c.config.BlueMoonConsts.Server.SERVER_18;
 import org.junit.AfterClass;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * @author yudong
  * @date 2019/1/21
  */
+@Slf4j
 public class DubboTest {
 
     @AfterClass
@@ -66,24 +68,24 @@ public class DubboTest {
     public void test() {
         UserService service = DubboUtils.getService(UserService.class, "1.0.0");
         Object resObj = service.getUserInfoByUserId("U18082410053572785731");
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
         resObj = service.getUserBaseByMobile("18826483966");
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
         UserInfoDto userInfoDto = new UserInfoDto();
         userInfoDto.setNickName("188****3966");
         resObj = service.getUserInfoByPart(userInfoDto);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test1() {
         UserService service = DubboUtils.getService(UserService.class, "1.0.0", SERVER_1);
         Object object = service.getUserInfoByUserId("U18110814354169025621");
-        System.out.println(OMUtils.writeValueAsString(object));
+        log.info(OMUtils.writeValueAsString(object));
         object = service.getUserBaseByMobile("18826483965");
-        System.out.println(OMUtils.writeValueAsString(object));
+        log.info(OMUtils.writeValueAsString(object));
         object = service.getUserBaseByMobile("18826483966");
-        System.out.println(OMUtils.writeValueAsString(object));
+        log.info(OMUtils.writeValueAsString(object));
     }
 
     @Test
@@ -92,13 +94,13 @@ public class DubboTest {
         JSONObject object = new JSONObject();
         object.put("mobile", "18826483964");
         Object resObj = service.getUserInfoByMobile(object);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("account", "80546269");
         jsonObject.put("password", MD5Implementor.MD5Encode("qq123123"));
         String response = service.ssoLogin(jsonObject);
-        System.out.println(response);
+        log.info(response);
     }
 
     @Test
@@ -107,14 +109,14 @@ public class DubboTest {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("token", "21fe6aadeb3561241e7e6aca60b5a757");
         Object resObj = service.checkToken(jsonObject);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
         jsonObject.put("token", "23fe6aadeb3561241e7e6aca60b5a757");
         resObj = service.checkToken(jsonObject);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
         JSONObject jsonObj = new JSONObject();
         jsonObj.put("account", "80546269");
         resObj = service.getUserInfo(jsonObj);
-        System.out.println(resObj);
+        log.info("{}", resObj);
     }
 
     @Test
@@ -122,25 +124,24 @@ public class DubboTest {
         SsoService service = DubboUtils.getService(SsoService.class, null);
         JSONObject reqJsonObj = new JSONObject();
         reqJsonObj.put("token", "3163e6314b3265c5386b0477af298146");
-        // reqJsonObj.put("token", "21fe6aadeb3561241e7e6aca60b5a757");
         String string = service.getUserInfoByToken(reqJsonObj);
         JSONObject resObj = JSONObject.fromObject(string);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test5() {
         Object resObj = DubboUtils.invoke(UserService.class
-                , "getUserInfoByUserId", Arrays.asList("U18110814354169025621")
+                , "getUserInfoByUserId", Collections.singletonList("U18110814354169025621")
                 , "1.0.0");
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test6() {
-        // UserDubboService service = DubboUtils.getService(UserDubboService.class, "1.0.0", "127.0.0.1:21899");
-        // Object resObj = service.queryAll();
-        // System.out.println(OMUtils.writeValueA/sString(resObj, true));
+        UserDubboService service = DubboUtils.getService(UserDubboService.class, "1.0.0", "127.0.0.1:21899");
+        Object resObj = service.queryAll();
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
@@ -155,63 +156,63 @@ public class DubboTest {
         jsonObject.put("startTime", start.getTime());
         jsonObject.put("endTime", end.getTime());
         Object resObj = service.getStudentSignListByParams(jsonObject);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test9() {
         ImageService service = DubboUtils.getService(ImageService.class, "1.0.0");
         Object resObj = service.getImageVo("group1//M00/02/D7/wKjwDlzko0WASMxbAABOTuQ2LwA962.jpg", "fdfs");
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test10() {
         UserService service = DubboUtils.getService(UserService.class, "1.0.0-yudong");
         Object resObj = service.getUserInfoByBlurMobile("3966", 1, 10, MatchType.BACK);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test11() {
         WashPriceManageService service = DubboUtils.getService(WashPriceManageService.class);
         Object resObj = service.getWashPriceManageByWashCode("65476543");
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test12() {
         MallWashOrderService service = DubboUtils.getService(MallWashOrderService.class, "1.0.0-yudong");
         Object resObj = service.createMallOrderInfo(null);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test13() {
         WashOrderService service = DubboUtils.getService(WashOrderService.class, "1.0.0-yudong");
         Object resObj = service.getWashOrderPayInfos("U2003031940286000001");
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test14() {
         UserAddressService service = DubboUtils.getService(UserAddressService.class, "1.0.0");
         Object resObj = service.getUserAddress("U190701150946235921", "", null);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test15() throws Exception {
         RegionService service = DubboUtils.getService(RegionService.class, null);
         Object resObj = service.selectRegionByCodeAndType("4401", "county");
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test16() {
         WashLevelTypeService service = DubboUtils.getService(WashLevelTypeService.class, "1.0.0");
         Object resObj = service.getMallWashLevelTypeByParentId("0");
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
@@ -229,15 +230,15 @@ public class DubboTest {
         msg.put("url", "");  //如果上面的view等于h5，则url项必填，写入的是菜单的url
         json.put("msg", msg);
         Object resObj = service.singleMsgPush(json);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test18() throws Exception {
         RegionService service = DubboUtils.getService(RegionService.class, null, SERVER_18);
         Object resObj = service.getPointInfo("广东广州增城区凤凰岛一街凤凰苑");
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
-        System.out.println(OMUtils.writeValueAsString(service.getAddressByGPS(0.0, 23.14365, 113.56129), true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(service.getAddressByGPS(0.0, 23.14365, 113.56129), true));
     }
 
     @Test
@@ -245,8 +246,8 @@ public class DubboTest {
         DubboCommonService service = DubboUtils.getService(DubboCommonService.class, null, "127.0.0.1:20880");
         Object resObj = service.findWashCollectPointsArea("44", "4401", "440106", "", null);
         Object resObj1 = service.findWashCollectPointsArea("44", "4401", "440106", "", "五山路中公教育大厦");
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
-        System.out.println(OMUtils.writeValueAsString(resObj1, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj1, true));
     }
 
     @Test
@@ -255,8 +256,8 @@ public class DubboTest {
         WashPriceManageService service = DubboUtils.getService(WashPriceManageService.class, "1.0.0");
         Object resObj = service.getWashPriceManageByWashCode("010308");
         Object resObj1 = service.getWashPriceManageByWashCode("010215");
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
-        System.out.println(OMUtils.writeValueAsString(resObj1, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj1, true));
     }
 
     @Test
@@ -268,21 +269,21 @@ public class DubboTest {
         jsonObj.put("myAccount", "xyzx");
         jsonObj.put("myProjectName", "洗衣中心");
         Object resObj = service.send(jsonObj);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test22() {
         WashOrderService service = DubboUtils.getService(WashOrderService.class, "1.0.0", "127.0.0.1:21888");
         Object resObj = service.updatePayOperationType("U190701150946235921", "TW191126114108669852", 1);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test23() {
         CustomizingOrderDubboService service = DubboUtils.getService(CustomizingOrderDubboService.class, "1.0.0");
         Object resObj = service.findCustomizingOrderDetails("TW191128093529703502");
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
@@ -291,14 +292,14 @@ public class DubboTest {
         UserCouponPackageManageDto dto = new UserCouponPackageManageDto();
         dto.setPhone("18826483963");
         Object resObj = service.getUserCouponPackageManagePage(dto);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test25() {
         DubboCommonService service = DubboUtils.getService(DubboCommonService.class);
         Object resObj = service.findWashCollectPointsArea("44", "4401", "4440106", "", "五山路261号");
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
@@ -307,36 +308,34 @@ public class DubboTest {
         AddressDto addressDto = new AddressDto();
         addressDto.setAddress("广东省广州市天河区五山路261号中公教育大厦");
         ResultBean<AddressVo> resObj = service.geocoder(addressDto, ApiTypeEnums.amap);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
-    public void test27() throws Exception {
+    public void test27() {
         BasicMapService service = DubboUtils.getService(BasicMapService.class, "1.0.0");
         Coordinates coordinates = new Coordinates();
-        // coordinates.setLng(113.346108960161);
-        // coordinates.setLat(23.1473462711974);
         coordinates.setLng(113.346380);
         coordinates.setLat(23.147320);
         Object resObj = service.regeocoder(coordinates, ApiTypeEnums.amap);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test28() throws Exception {
         MapService mapService = DubboUtils.getService(MapService.class);
         Object resObj = mapService.getAddressByPoint(123.525270, 42.045748);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
-    public void test29() throws Exception {
+    public void test29() {
         MessageQueueService service = DubboUtils.getService(MessageQueueService.class, "1.3.6");
         JSONObject json = new JSONObject();
         json.put("clothesCode", "20200407hd001");
         json.put("reportCode", "2004070003");
         Object resObj = service.sendMessage("clothes_conmunication_notice", json.toString(), true);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
@@ -351,14 +350,14 @@ public class DubboTest {
         json.put("subject", "系统异常提醒");
         json.put("username", "gzxyzx@bluemoon.com.cn");
         Object resObj = service.send(json);
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
+        log.info(OMUtils.writeValueAsString(resObj, true));
     }
 
     @Test
     public void test31() {
         DubboCommonService service = DubboUtils.getService(DubboCommonService.class, "1.0.0-yudong");
         String jsonStrAddress = service.findWashCollectPointsArea("44", "4418", "441881", "", "英城街道23号");
-        System.out.println(jsonStrAddress);
+        log.info(jsonStrAddress);
     }
 
     @Test
@@ -373,44 +372,91 @@ public class DubboTest {
         jsonObject.put("pageIndex", 0);
         jsonObject.put("pageSize", 20);
         jsonObject.put("method", "getUnRecord");
+        @SuppressWarnings("ALL")
         Object res = service.commonDubbo(jsonObject);
-        System.out.println(res);
+        log.info("{}", res);
     }
 
     @Test
     public void test33() {
         SubscribeService service = DubboUtils.getService(SubscribeService.class, "1.0.0");
         Object res = service.subscribeTraces("246453112546", "SF", "washing");
-        System.out.println(JSON.toJSONString(res));
+        log.info(JSON.toJSONString(res));
     }
 
     @Test
     public void test34() throws Exception {
         PortalAppService service = DubboUtils.getService(PortalAppService.class, null);
-        Object resObj = service.getRoleListByUser("80546269");
-        System.out.println(OMUtils.writeValueAsString(resObj, true));
-        JsonNode roleListResJson = OMUtils.objectMapper.readValue((String) resObj, JsonNode.class);
+        String resObj = service.getRoleListByUser("80546269");
+        log.info(OMUtils.writeValueAsString(resObj, true));
+        JsonNode roleListResJson = OMUtils.objectMapper.readValue(resObj, JsonNode.class);
         Iterator<JsonNode> iterable = roleListResJson.get("info").iterator();
-        iterable.forEachRemaining(jsonNode -> {
-            System.out.println(jsonNode.asText());
-        });
+        iterable.forEachRemaining(jsonNode -> log.info(jsonNode.asText()));
     }
 
 
     @Test
     public void test35() {
         DubboCommonService service = DubboUtils.getService(DubboCommonService.class, "1.0.0-yudong");
-        // DubboCommonService service = DubboUtils.getService(DubboCommonService.class, null);
         Object resObj = service.updateOuterOrderStatus("TW200720142145054721", "OUTER_CANCEL");
-        // Object resObj = service.updateOuterOrderStatus("TW200720142145054721", "OUTER_WAIT");
-        System.out.println(resObj);
+        log.info("{}", resObj);
     }
 
     @Test
     public void test36() {
         WashOrderService service = DubboUtils.getService(WashOrderService.class, "1.0.0");
         Object resObj = service.getPayTypeInfoByOuterCode("TW200721144121203381");
-        System.out.println(resObj);
+        log.info("{}", resObj);
+    }
+
+    @Test
+    public void test37() throws Exception {
+        MoonMallOrderService service = DubboUtils.getService(MoonMallOrderService.class, "1.0.0");
+        Object resObj = service.getOrderInfoByOuterCode("U190701150946235921", "TW200721144121203381");
+        log.info("{}", resObj);
+    }
+
+    @Test
+    public void test38() {
+        MoonMallItemService service = DubboUtils.getService(MoonMallItemService.class, "1.0.0");
+        Object resObj = service.getInfoByItemIds(Arrays.asList("i200530081626087961", "i200130002702861351"), true);
+        log.info("{}", resObj);
+    }
+
+    @Test
+    public void test39() {
+        MoonMallShoppingCartDubboService service = DubboUtils.getService(MoonMallShoppingCartDubboService.class, "1.0.0-yudong");
+        Object resObj = service.getCartProductList("U18101210443058835251", "tick");
+        log.info("{}", resObj);
+    }
+
+    @Test
+    public void test40() throws Exception {
+        MallPromotionActivityBaseService service = DubboUtils.getService(MallPromotionActivityBaseService.class, "1.0.0");
+        List<CartItemVo> cartItemVos = new ArrayList<>();
+        CartItemVo cartItemVo = new CartItemVo();
+        cartItemVo.setItemId("i200915123609471341");
+        cartItemVo.setSku("95346654");
+        cartItemVo.setNum(1);
+        cartItemVo.setStatus("on");
+        cartItemVo.setState("tick");
+        Object resObj = service.getDefaultUsableCoupon("U18101210443058835251", cartItemVos, "", "washMall", "ITEM", "");
+        log.info("{}", resObj);
+    }
+
+    @Test
+    public void test41() {
+        SysDictDubboService service = DubboUtils.getService(SysDictDubboService.class, "1.0.0");
+        Object resObj = service.findDictByType("MallItemPostStatus");
+        log.info("{}", resObj);
+    }
+
+    @Test
+    public void test42() {
+        SysDictDubboService service = DubboUtils.retrieveService(SysDictDubboService.class, "1.0.0", null);
+        Object resObj = service.findDictByType("MallItemPostStatus");
+        System.out.println("---------------------\n\n\n\n\n\n");
+        log.info("{}", resObj);
     }
 
 }

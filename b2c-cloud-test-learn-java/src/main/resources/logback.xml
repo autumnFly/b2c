@@ -9,7 +9,8 @@
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>D:\\home\\logs\\sql.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>D:\\home\\logs\\sql.%d{yyyy-MM-dd-HH}.log.zip
+            <FileNamePattern>
+                D:\\home\\logs\\sql.%d{yyyy-MM-dd-HH}.log.zip
             </FileNamePattern>
         </rollingPolicy>
         <encoder>
@@ -21,7 +22,9 @@
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>D:\\home\\logs\\sql-original.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>D:\\home\\logs\\sql-original.%d{yyyy-MM-dd-HH}.log.zip</FileNamePattern>
+            <FileNamePattern>
+                D:\\home\\logs\\sql-original.%d{yyyy-MM-dd-HH}.log.zip
+            </FileNamePattern>
         </rollingPolicy>
         <encoder>
             <pattern>%msg;%n</pattern>
@@ -31,7 +34,9 @@
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>D:\\home\\logs\\sql-new.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>D:\\home\\logs\\sql-new.%d{yyyy-MM-dd-HH}.log.zip</FileNamePattern>
+            <FileNamePattern>
+                D:\\home\\logs\\sql-new.%d{yyyy-MM-dd-HH}.log.zip
+            </FileNamePattern>
         </rollingPolicy>
         <encoder>
             <pattern>%msg;%n</pattern>
