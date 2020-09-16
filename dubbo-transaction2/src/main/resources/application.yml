@@ -66,10 +66,10 @@ seata:
       name: file.conf
     type: zk
     zk:
-      server-addr: localhost:2181
+      server-addr: 192.168.240.15:2181
   config:
     file:
       name: file.conf
     type: zk
     zk:
-      server-addr: localhost:2181
+      server-addr: 192.168.240.15:2181

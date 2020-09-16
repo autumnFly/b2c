@@ -16,7 +16,6 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 public class DubboTransaction3Application {
 
     public static void main(String[] args) {
-        System.setProperty("spring.dubbo.scan", "org.javamaster");
         SpringApplication.run(DubboTransaction3Application.class, args);
     }
 

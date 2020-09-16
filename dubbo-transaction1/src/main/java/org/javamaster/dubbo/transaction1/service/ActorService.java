@@ -16,4 +16,6 @@ public interface ActorService {
     void cancelInsertActor(ActorReqVo actorReqVo);
 
     void dtxInsertActor(ActorReqVo actorReqVo);
+
+    void saveActorTimeOut(ActorReqVo actorReqVo);
 }

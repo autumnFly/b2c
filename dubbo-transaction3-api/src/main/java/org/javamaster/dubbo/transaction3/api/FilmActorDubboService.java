@@ -18,4 +18,5 @@ public interface FilmActorDubboService {
 
     List<Integer> dtxInsertFilmActors(int actorId, List<Integer> filmIds);
 
+    List<Integer> timeOutInsertFilmActors(int i, List<Integer> asList);
 }

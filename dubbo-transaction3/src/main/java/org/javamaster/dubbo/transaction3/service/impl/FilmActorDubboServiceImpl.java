@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -21,7 +23,7 @@ import java.util.stream.Collectors;
  * @date 2020/6/29
  */
 @Slf4j
-@Service(version = "1.0.0")
+@Service(version = "1.0.0", timeout = 2000)
 public class FilmActorDubboServiceImpl implements FilmActorDubboService {
 
     @Autowired
@@ -53,6 +55,16 @@ public class FilmActorDubboServiceImpl implements FilmActorDubboService {
     @GlobalTransactional(timeoutMills = 300000, name = "dubbo-transaction3")
     public List<Integer> dtxInsertFilmActors(int actorId, List<Integer> filmIds) {
         return doBusiness(actorId, filmIds);
+    }
+
+    @Override
+    public List<Integer> timeOutInsertFilmActors(int i, List<Integer> asList) {
+        try {
+            TimeUnit.SECONDS.sleep(8);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return Arrays.asList(1, 2);
     }
 
     private List<Integer> doBusiness(int actorId, List<Integer> filmIds) {

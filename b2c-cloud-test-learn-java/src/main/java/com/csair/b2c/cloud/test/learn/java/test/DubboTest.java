@@ -1,11 +1,14 @@
 package com.csair.b2c.cloud.test.learn.java.test;
 
+import cn.com.bluemoon.app.dubbo.service.SysDictDubboService;
 import cn.com.bluemoon.common.util.MD5Implementor;
 import cn.com.bluemoon.crmbp.service.toSfa.SfaDubboService;
 import cn.com.bluemoon.dubbo.kdn.SubscribeService;
 import cn.com.bluemoon.file.dubbo.service.ImageService;
 import cn.com.bluemoon.mall.activity.dubbo.dto.UserCouponPackageManageDto;
+import cn.com.bluemoon.mall.activity.dubbo.service.MallPromotionActivityBaseService;
 import cn.com.bluemoon.mall.activity.dubbo.service.UserCouponPackageManageService;
+import cn.com.bluemoon.mall.activity.dubbo.vo.CartItemVo;
 import cn.com.bluemoon.mall.order.dubbo.service.MallWashOrderService;
 import cn.com.bluemoon.mall.user.dubbo.dto.UserInfoDto;
 import cn.com.bluemoon.mall.user.dubbo.enums.MatchType;

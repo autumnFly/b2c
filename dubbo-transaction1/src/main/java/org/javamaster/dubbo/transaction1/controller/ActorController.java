@@ -36,4 +36,13 @@ public class ActorController {
         return "保存成功";
     }
 
+    @GetMapping("/saveActorTimeOut")
+    public String saveActorTimeOut() {
+        ActorReqVo actorReqVo = new ActorReqVo();
+        actorReqVo.setFirstName("Liang");
+        actorReqVo.setLastName("Yudong");
+        actorService.saveActorTimeOut(actorReqVo);
+        return "保存成功";
+    }
+
 }
