@@ -2,7 +2,7 @@ server:
   port: 8761
 eureka:
   instance:
-    hostname: eureka.dev.csair.com
+    hostname: localhost
     leaseExpirationDurationInSeconds: 10000
   client:
     #缓存清单的更新时间
@@ -35,24 +35,24 @@ management:
   security:
     enabled: false
 info:
-  query all service list: 
+  queryAllServiceList:
     method: GET
     url: ${eureka.client.serviceUrl.defaultZone}apps
-  query specific service list:
+  querySpecificServiceList:
     method: GET
     url: ${eureka.client.serviceUrl.defaultZone}apps/appID
-  query specific instance of some service:
+  querySpecificInstanceOfSomeService:
     method: GET
     url: ${eureka.client.serviceUrl.defaultZone}apps/appID/instanceID
-  query specific instance:
+  querySpecificInstance:
     method: GET
     url: ${eureka.client.serviceUrl.defaultZone}instances/instanceID
-  delete specific instance of some service:
+  deleteSpecificInstanceOfSomeService:
     method: DELETE
     url: ${eureka.client.serviceUrl.defaultZone}apps/appID/instanceID
-  change specific instance status down:
+  changeSpecificInstanceStatusDown:
     method: PUT
     url: ${eureka.client.serviceUrl.defaultZone}apps/appID/instanceID/status?value=OUT_OF_SERVICE
-  change specific instance status up:
+  changeSpecificInstanceStatusUp:
     method: PUT
     url: ${eureka.client.serviceUrl.defaultZone}apps/appID/instanceID/status?value=UP
