@@ -1,21 +1,22 @@
 package org.javamaster.b2c.dubbo.server.service.impl;
 
 
-import com.alibaba.dubbo.config.annotation.Service;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboService;
+import org.apache.dubbo.rpc.RpcContext;
 import org.javamaster.b2c.dubbo.server.api.dto.UserDto;
 import org.javamaster.b2c.dubbo.server.api.service.UserDubboService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.validation.constraints.NotNull;
+import java.util.*;
 
 /**
  * Created on 2018/10/11.<br/>
  *
  * @author yudong
  */
-@Service(version = "1.0.0")
+@Slf4j
+@DubboService(version = "1.0.0", validation = "true")
 public class UserDubboServiceImpl implements UserDubboService {
 
 
@@ -46,5 +47,12 @@ public class UserDubboServiceImpl implements UserDubboService {
         Map<String, Object> map = new HashMap<>(10);
         map.put("list", list);
         return map;
+    }
+
+    @Override
+    public UserDto find(@NotNull UserDto userDto) {
+        RpcContext rpcContext = RpcContext.getContext();
+        log.info("{},{}", rpcContext.isProviderSide(), rpcContext.getAttachment("age"));
+        return userDto;
     }
 }

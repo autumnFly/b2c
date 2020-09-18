@@ -1,11 +1,11 @@
 package org.javamaster.b2c.dubbo.client;
 
-import com.alibaba.dubbo.config.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.*;
 import org.javamaster.b2c.config.BlueMoonConsts;
 import org.javamaster.b2c.dubbo.server.api.dto.UserDto;
 import org.javamaster.b2c.dubbo.server.api.service.UserDubboService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 

@@ -1,11 +1,11 @@
 package org.javamaster.b2c.dubbo.server;
 
-import com.alibaba.dubbo.config.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.*;
 import org.javamaster.b2c.config.BlueMoonConsts;
 import org.javamaster.b2c.dubbo.server.api.service.UserDubboService;
 import org.javamaster.b2c.dubbo.server.service.impl.UserDubboServiceImpl;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
 @Slf4j
@@ -22,7 +22,7 @@ public class DubboServiceMainTests {
 
         // 连接注册中心配置
         RegistryConfig registry = new RegistryConfig();
-        registry.setAddress(BlueMoonConsts.Dubbo.ZOOKEEPER_ADDRESS_1);
+        registry.setAddress(BlueMoonConsts.Dubbo.ZOOKEEPER_ADDRESS);
 
         // 服务提供者协议配置
         ProtocolConfig protocol = new ProtocolConfig();

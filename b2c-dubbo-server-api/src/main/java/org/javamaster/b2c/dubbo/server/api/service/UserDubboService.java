@@ -14,4 +14,6 @@ public interface UserDubboService {
     List<UserDto> queryAll();
 
     Map<String, Object> query(List<Integer> empCodes);
+
+    UserDto find(UserDto userDto);
 }
