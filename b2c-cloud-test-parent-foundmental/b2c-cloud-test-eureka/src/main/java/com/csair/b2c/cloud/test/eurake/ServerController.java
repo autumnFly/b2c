@@ -29,9 +29,9 @@ public class ServerController {
         while (enumeration.hasMoreElements()) {
             String name = enumeration.nextElement();
             Enumeration<String> enumeration1 = request.getHeaders(name);
-            String value = "";
+            StringBuilder value = new StringBuilder();
             while (enumeration1.hasMoreElements()) {
-                value += enumeration1.nextElement() + " ";
+                value.append(enumeration1.nextElement()).append(" ");
             }
             stringBuilder.append(name)
                     .append(":")
