@@ -1,6 +1,7 @@
 package org.javamaster.b2c.dubbo.server.service.impl;
 
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.dubbo.rpc.RpcContext;
@@ -9,6 +10,7 @@ import org.javamaster.b2c.dubbo.server.api.service.UserDubboService;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created on 2018/10/11.<br/>
@@ -19,9 +21,15 @@ import java.util.*;
 @DubboService(version = "1.0.0", validation = "true")
 public class UserDubboServiceImpl implements UserDubboService {
 
+    private final AtomicInteger atomicInteger = new AtomicInteger();
 
+    @SneakyThrows
     @Override
     public List<UserDto> queryAll() {
+        log.info("dubbo thread name:{},id:{},count:{}",
+                Thread.currentThread().getName(),
+                Thread.currentThread().getId(),
+                atomicInteger.incrementAndGet());
         List<UserDto> users = new ArrayList<>(3);
         users.add(new UserDto(1L, "yu", "123yu", 23));
         users.add(new UserDto(2L, "yudong", "123yudong", 24));

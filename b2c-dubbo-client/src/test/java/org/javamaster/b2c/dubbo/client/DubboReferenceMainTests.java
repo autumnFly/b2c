@@ -1,5 +1,6 @@
 package org.javamaster.b2c.dubbo.client;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.*;
 import org.javamaster.b2c.config.BlueMoonConsts;
@@ -16,6 +17,7 @@ import java.util.List;
 @Slf4j
 public class DubboReferenceMainTests {
 
+    @SneakyThrows
     @Test
     public void consumerService() {
         // 当前应用配置
@@ -24,7 +26,7 @@ public class DubboReferenceMainTests {
 
         // 连接注册中心配置
         RegistryConfig registry = new RegistryConfig();
-        registry.setAddress(BlueMoonConsts.Dubbo.ZOOKEEPER_ADDRESS_1);
+        registry.setAddress(BlueMoonConsts.Dubbo.ZOOKEEPER_ADDRESS + "?timeout=30000");
 
         // 注意：ReferenceConfig为重对象，内部封装了与注册中心的连接，以及与服务提供方的连接
 
@@ -36,6 +38,8 @@ public class DubboReferenceMainTests {
         reference.setRegistry(registry);
         reference.setInterface(UserDubboService.class);
         reference.setVersion("1.0.0");
+        reference.setTimeout(10000);
+        reference.setRetries(0);
 
         // 和本地bean一样使用xxxService
         // 注意：此代理对象内部封装了所有通讯细节，对象较重，请缓存复用

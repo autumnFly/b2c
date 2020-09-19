@@ -3,6 +3,7 @@ package org.javamaster.b2c.swagger2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.ApplicationContext;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
@@ -15,9 +16,15 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 public class Swagger2Application {
 
+    private static ApplicationContext context;
+
     public static void main(String[] args) {
-        SpringApplication.run(Swagger2Application.class, args);
+        context = SpringApplication.run(Swagger2Application.class, args);
         System.out.println("http://localhost:8258/home/login?username=root&password=root");
+    }
+
+    public static ApplicationContext getContext() {
+        return context;
     }
 
 }
