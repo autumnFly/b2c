@@ -11,9 +11,32 @@ ognl "@java.lang.Thread@currentThread().getContextClassLoader()"
 
 # 获取类的静态字段
 ognl '@java.lang.System@out'
+getstatic java.lang.System out
 
 #执行多行表达式，赋值给临时变量，返回一个List
 ognl '#value1=@System@getProperty("java.home"), #value2=@System@getProperty("java.runtime.name"), {#value1, #value2}'
+
+# 可调用被spring管理的任意bean的任意方法
+ognl "#value1=@cn.com.bluemoon.mall.common.utils.AppContextHelper@applicationContext.getBean('promotionCouponBaseService').getByActId(new java.math.BigInteger('16032219530215768471')),
+#value2=@com.alibaba.fastjson.JSONObject@toJSONString(#value1),
+{#value2}"
+
+# 获取加载该类的classloader的hash码
+sc -d org.javamaster.b2c.swagger2.Swagger2Application
+# 指定使用的classloader的hash码
+ognl -c 439f5b3d "#value1=@org.javamaster.b2c.swagger2.Swagger2Application@context.getBean('loginServiceImpl').login(new org.javamaster.b2c.swagger2.model.UserReqVo(),'1'),
+#value2=new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(#value1),
+{#value2}"
+
+# 若应用没有暴露context,可以用此命令记录context
+tt -t org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter invokeHandlerMethod
+# 拿到context
+tt -i 1000 -w "target.getApplicationContext()"
+
+# 若应用引入了dubbo,则可以这样拿到context
+ognl "#context=@com.alibaba.dubbo.config.spring.extension.SpringExtensionFactory@contexts.iterator.next,
+#value1=#context.getBean('loginServiceImpl').login(new org.javamaster.b2c.swagger2.model.UserReqVo(),'1')"
+
 
 # 查看JVM已加载的类信息
 sc org.javamaster.b2c.swagger2.service.impl*
@@ -42,6 +65,8 @@ redefine /tmp/LoginServiceImpl.class
 
 # 方法执行监控
 monitor -c 5 org.javamaster.b2c.swagger2.service.impl.LoginServiceImpl login
+# 方法执行堆栈耗时
+trace -E org.javamaster.b2c.swagger2.controller.LoginController|org.javamaster.b2c.swagger2.service.impl.LoginServiceImpl login
 
 # 观察方法调用前入参
 watch org.javamaster.b2c.swagger2.service.impl.LoginServiceImpl login {params} -x 2 -b
