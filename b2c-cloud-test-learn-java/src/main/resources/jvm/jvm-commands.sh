@@ -31,7 +31,7 @@ jstat -gcnew
 # S0C    S1C    S0U    S1U     TT MTT   DSS      EC       EU       YGC     YGCT
 #68224.0 68224.0    0.0 4507.8 15  15 34112.0 273152.0 118495.6    571    6.397
 
-#实时查看和调整虚拟机各项参数
+#实时查看和调整虚拟机各项参数以及系统属性和系统环境
 #1.6以上可用java -XX:+PrintFlagsFinal查看所有参数
 jinfo
 
