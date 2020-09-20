@@ -126,3 +126,9 @@ env
 # /etc/group 群组说明
 #root:x:0:
 #组名:群组密码:gid:此群组支持的账号名称
+
+#查询进程所占端口
+sudo netstat -ltp | grep 21324
+
+#查询端口被哪个进程所占
+sudo netstat -ltp | grep 20884
